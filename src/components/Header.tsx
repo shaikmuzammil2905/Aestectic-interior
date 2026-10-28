@@ -8,7 +8,6 @@ import {
   X, 
   ChevronDown, 
   ChevronRight,
-  Sparkles,
   MapPin
 } from 'lucide-react';
 import { siteConfig, getWhatsAppLink } from '../data/siteConfig';
@@ -26,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -45,50 +44,35 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
 
   return (
     <>
-      {/* Top Announcement Strip */}
-      <div className="bg-espresso text-ivory/90 text-xs py-2 px-4 text-center tracking-widest font-sans uppercase border-b border-gold/20 flex items-center justify-center space-x-2">
+      {/* Top Announcement Strip - Hidden on mobile as requested in image copy 11 */}
+      <div className="hidden md:flex bg-espresso text-ivory/90 text-xs py-2 px-4 text-center tracking-widest font-sans uppercase border-b border-gold/20 items-center justify-center space-x-2">
         <span className="inline-block w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></span>
         <span>Thoughtfully Designed Interiors Across Telangana</span>
-        <span className="hidden sm:inline-block text-gold/60">•</span>
-        <span className="hidden sm:inline-block text-sand/80 font-normal lowercase tracking-normal">Direct In-House Modular Factory</span>
+        <span className="text-gold/60">•</span>
+        <span className="text-sand/80 font-normal lowercase tracking-normal">Direct In-House Modular Factory</span>
       </div>
 
       {/* Main Sticky Navigation Bar */}
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-ivory/95 backdrop-blur-md shadow-sm border-b border-subtle/80 py-3'
-            : 'bg-ivory/90 backdrop-blur-sm border-b border-subtle/50 py-4'
+            ? 'bg-ivory/95 backdrop-blur-md shadow-sm border-b border-subtle/80 py-2.5 sm:py-3'
+            : 'bg-ivory/90 backdrop-blur-sm border-b border-subtle/50 py-3 sm:py-4'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           
-          {/* Logo Area */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          {/* Logo Area: Clean, crisp, NO duplicate text next to it! */}
+          <Link to="/" className="flex items-center group flex-shrink-0">
             <img
               src="/assets/logo.png"
               alt="Aesthetic Interiors & Modular Factory"
-              className="h-10 sm:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-              onError={(e) => {
-                // Fallback to text logo if image fails
-                (e.target as HTMLElement).style.display = 'none';
-              }}
+              className="h-8 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
             />
-            <div className="flex flex-col">
-              <span className="font-serif text-lg sm:text-xl font-bold tracking-[0.18em] text-espresso uppercase leading-none">
-                AESTHETIC
-              </span>
-              <span className="font-sans text-[10px] sm:text-xs tracking-[0.25em] text-gold font-semibold uppercase leading-tight mt-0.5">
-                INTERIORS
-              </span>
-              <span className="font-sans text-[8px] tracking-[0.18em] text-muted uppercase leading-none mt-0.5">
-                & MODULAR FACTORY
-              </span>
-            </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
+          <nav className="hidden lg:flex items-center space-x-2 xl:space-x-4 ml-6">
             <Link
               to="/"
               className={`px-3 py-2 text-sm font-medium transition-colors relative ${
@@ -216,7 +200,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
 
           {/* Right Action CTA & Phone Contacts */}
           <div className="hidden lg:flex items-center space-x-4">
-            {/* Consultation Button */}
             <button
               onClick={onOpenConsultation || (() => window.location.href = '/contact')}
               className="bg-espresso hover:bg-espresso-light text-softwhite px-4 py-2.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm hover:shadow flex items-center space-x-2 group cursor-pointer"
@@ -226,7 +209,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
               <ChevronRight className="w-3.5 h-3.5 text-gold transition-transform group-hover:translate-x-0.5" />
             </button>
 
-            {/* Quick Contact Numbers */}
             <div className="flex items-center space-x-2 pl-2 border-l border-subtle text-xs">
               <a
                 href={`tel:${siteConfig.primaryPhone}`}
@@ -242,7 +224,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
                 </div>
               </a>
 
-              {/* Direct WhatsApp Pill */}
               <a
                 href={getWhatsAppLink()}
                 target="_blank"
@@ -255,20 +236,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
             </div>
           </div>
 
-          {/* Mobile Right Controls: Consultation button & Hamburger */}
+          {/* Mobile Right Controls: Clean CONSULT button & Hamburger */}
           <div className="flex items-center space-x-2 lg:hidden">
             <button
               onClick={onOpenConsultation || (() => window.location.href = '/contact')}
-              className="bg-espresso text-softwhite px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-wider uppercase flex items-center space-x-1.5 shadow-sm"
+              className="bg-espresso text-softwhite px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-wider uppercase flex items-center space-x-1.5 shadow-sm cursor-pointer"
             >
-              <Calendar className="w-3 h-3 text-gold" />
-              <span className="hidden sm:inline">Book Free Consultation</span>
-              <span className="sm:hidden">Consult</span>
+              <Calendar className="w-3.5 h-3.5 text-gold" />
+              <span>Consult</span>
             </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-espresso hover:text-gold transition-colors focus:outline-none"
+              className="p-1.5 text-espresso hover:text-gold transition-colors focus:outline-none"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -295,7 +275,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
               ))}
             </div>
 
-            {/* Direct Quick Actions inside Drawer */}
             <div className="pt-4 border-t border-subtle/80 space-y-2">
               <a
                 href={getWhatsAppLink()}

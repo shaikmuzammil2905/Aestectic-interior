@@ -3,9 +3,7 @@ import {
   Sparkles, 
   ArrowRight, 
   CheckCircle2, 
-  Calendar,
-  Layers,
-  ChevronRight
+  Calendar
 } from 'lucide-react';
 import { BeforeAfterSlider } from '../components/BeforeAfterSlider';
 import { beforeAfterData } from '../data/beforeAfterData';
@@ -23,9 +21,9 @@ export const BeforeAfterPage: React.FC<BeforeAfterPageProps> = ({ onOpenConsulta
       
       {/* Header */}
       <section className="relative py-20 bg-charcoal text-softwhite overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-25">
           <img
-            src="/assets/transformation_after.png"
+            src="/assets/transformation_after_hd.jpg"
             alt="Transformations"
             className="w-full h-full object-cover"
           />
@@ -91,15 +89,15 @@ export const BeforeAfterPage: React.FC<BeforeAfterPageProps> = ({ onOpenConsulta
               </div>
             </div>
 
-            {/* Large Interactive Comparison Slider */}
-            <div className="relative">
+            {/* Large Interactive Comparison Slider with Crystal-Clear HD Pictures */}
+            <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl border border-subtle">
               <BeforeAfterSlider
                 beforeImage={currentItem.beforeImage}
                 afterImage={currentItem.afterImage}
                 beforeLabel="Before"
                 afterLabel="After"
-                aspectRatio="aspect-[16/9]"
-                className="w-full max-h-[600px] shadow-2xl"
+                aspectRatio="aspect-[16/10]"
+                className="w-full h-full object-cover max-h-[600px]"
               />
             </div>
 

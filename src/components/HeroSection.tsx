@@ -6,11 +6,8 @@ import {
   Sparkles, 
   Award, 
   Layers, 
-  Compass,
   ChevronLeft,
-  ChevronRight,
-  ShieldCheck,
-  CheckCircle2
+  ChevronRight
 } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -58,48 +55,45 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
     <section className="relative w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] xl:min-h-[760px] overflow-hidden flex items-center bg-ivory">
       
       {/* ============================================================
-          ANIMATED HERO BACKGROUNDS
-          Desktop: image copy 2.png
-          Mobile: image copy 3.png
+          DESKTOP BACKGROUND: image copy 2.png
          ============================================================ */}
-      
-      {/* Desktop Background (hidden on small screens, shown lg+) */}
       <div className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
         <img
           src="/assets/hero-desktop.png"
           alt="Luxury Aesthetic Living Room"
           className="w-full h-full object-cover object-right-center animate-kenburns scale-105 transition-all duration-1000 ease-out will-change-transform"
         />
-        {/* Soft Left Gradient Overlay to keep text perfectly legible over marble shadows */}
-        <div className="absolute inset-0 bg-gradient-to-r from-ivory/95 via-ivory/80 to-transparent w-[58%]"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-ivory/60 via-transparent to-ivory/30"></div>
+        {/* Subtle gradient to keep left text crisp while letting right luxury room shine in full HD */}
+        <div className="absolute inset-0 bg-gradient-to-r from-ivory/95 via-ivory/80 to-transparent w-[55%]"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-ivory/50 via-transparent to-ivory/20"></div>
       </div>
 
-      {/* Mobile & Tablet Background (shown on small & tablet screens) */}
+      {/* ============================================================
+          MOBILE BACKGROUND: image copy 3.png AS IT IS IN HD!
+          (Heavy opaque ivory wash removed as requested in image copy 11)
+         ============================================================ */}
       <div className="lg:hidden absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
         <img
           src="/assets/hero-mobile.png"
           alt="Luxury Living Room Mobile"
           className="w-full h-full object-cover object-center animate-kenburns scale-105 transition-all duration-1000 ease-out will-change-transform"
         />
-        {/* Top-to-bottom warm ivory gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-ivory/95 via-ivory/85 to-ivory/30 h-[70%]"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-ivory/80 via-transparent to-transparent h-full"></div>
+        {/* Soft, minimal backdrop gradient so HD photo is completely visible as it is */}
+        <div className="absolute inset-0 bg-gradient-to-b from-ivory/80 via-ivory/40 to-charcoal/70"></div>
       </div>
 
-      {/* Subtle Shimmer & Light Bloom Effects */}
+      {/* Subtle Ambient Shimmer */}
       <div className="absolute top-10 left-1/3 w-72 h-72 bg-gold/10 rounded-full blur-3xl pointer-events-none animate-pulse-subtle"></div>
-      <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-sand/20 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Hero Content Container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 sm:py-16 lg:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-10 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* Left Column: Hero Text & Call to Actions */}
-          <div className="lg:col-span-7 xl:col-span-6 space-y-5 sm:space-y-6">
+          <div className="lg:col-span-7 xl:col-span-6 space-y-4 sm:space-y-6">
             
-            {/* Eyebrow with gold fine rules */}
-            <div className="inline-flex items-center space-x-3 animate-fade-in">
+            {/* Eyebrow */}
+            <div className="inline-flex items-center space-x-3">
               <span className="w-8 sm:w-12 h-px bg-gold"></span>
               <span className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] text-gold-accent uppercase font-sans">
                 {current.eyebrow}
@@ -108,23 +102,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
             </div>
 
             {/* Grand Serif Headline */}
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-medium text-espresso tracking-tight leading-[1.12]">
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-medium text-espresso tracking-tight leading-[1.12] drop-shadow-sm">
               <span className="block">{current.headingLine1}</span>
               <span className="block font-semibold text-espresso-dark italic">
                 {current.headingLine2}
               </span>
             </h1>
 
-            {/* Subtitle / Philosophy */}
-            <p className="text-sm sm:text-base text-muted font-sans font-normal leading-relaxed max-w-xl">
+            {/* Subtitle */}
+            <p className="text-xs sm:text-base text-espresso/80 sm:text-muted font-sans font-normal leading-relaxed max-w-xl">
               {current.subtitle}
             </p>
 
-            {/* CTAs */}
+            {/* Action Buttons */}
             <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
               <Link
                 to="/projects"
-                className="inline-flex items-center space-x-2 bg-espresso hover:bg-espresso-light text-softwhite px-6 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg group"
+                className="inline-flex items-center space-x-2 bg-espresso hover:bg-espresso-light text-softwhite px-5 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg group"
               >
                 <span>Explore Our Work</span>
                 <ArrowRight className="w-4 h-4 text-gold transition-transform group-hover:translate-x-1" />
@@ -132,20 +126,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
 
               <button
                 onClick={onOpenConsultation || (() => window.location.href = '/contact')}
-                className="inline-flex items-center space-x-2 bg-softwhite/80 hover:bg-softwhite text-espresso border border-subtle hover:border-gold/60 px-6 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-sm transition-all duration-300 shadow-sm hover:shadow cursor-pointer"
+                className="inline-flex items-center space-x-2 bg-softwhite/90 hover:bg-softwhite text-espresso border border-subtle hover:border-gold/60 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider backdrop-blur-sm transition-all duration-300 shadow-sm hover:shadow cursor-pointer"
               >
                 <Calendar className="w-4 h-4 text-gold" />
                 <span>Book a Consultation</span>
               </button>
             </div>
 
-            {/* Sub-label & Carousel Controls */}
-            <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-subtle/60 max-w-lg">
-              <span className="text-[11px] sm:text-xs tracking-wider text-muted/80 font-medium uppercase">
+            {/* Desktop Only: Sub-label & Carousel Controls (hidden on mobile as requested in image copy 11) */}
+            <div className="hidden sm:flex sm:items-center justify-between gap-4 border-t border-subtle/60 pt-4 max-w-lg">
+              <span className="text-[11px] sm:text-xs tracking-wider text-muted font-medium uppercase">
                 {current.tags}
               </span>
 
-              {/* Slider Dots & Arrow Controls */}
               <div className="flex items-center space-x-2">
                 <button
                   onClick={prevSlide}
@@ -182,49 +175,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
 
           </div>
 
-          {/* Right Column: Hero Accent Badges & Calligraphy */}
+          {/* Right Column: Floating Dark Luxe Badge & Calligraphy (media_1793162007601_12c0721f.png) */}
           <div className="lg:col-span-5 xl:col-span-6 flex flex-col items-end justify-center relative lg:min-h-[440px]">
             
-            {/* Desktop Floating Right Luxe Vertical Badge (from image.png) */}
-            <div className="hidden lg:flex flex-col space-y-3 bg-charcoal/90 backdrop-blur-md text-softwhite p-3.5 rounded-2xl border border-gold/30 shadow-2xl absolute right-0 top-1/2 -translate-y-1/2 animate-float-slow">
-              <div className="flex items-center space-x-2 text-right group">
+            {/* Stitched Grand Luxe Floating Badge */}
+            <div className="hidden lg:flex flex-col space-y-3 bg-charcoal/95 backdrop-blur-md text-softwhite p-4 rounded-3xl border border-gold/40 shadow-2xl absolute right-0 top-1/2 -translate-y-1/2 animate-float-slow hover:border-gold transition-colors">
+              <div className="flex items-center space-x-3 text-right">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-semibold text-gold tracking-wider uppercase">Modern</span>
-                  <span className="text-[9px] text-ivory/70">Designs</span>
+                  <span className="text-[11px] font-bold text-gold tracking-widest uppercase">MODERN</span>
+                  <span className="text-[10px] text-ivory/80">Designs</span>
                 </div>
-                <div className="w-7 h-7 rounded-lg bg-gold/20 flex items-center justify-center text-gold">
-                  <Sparkles className="w-3.5 h-3.5" />
+                <div className="w-8 h-8 rounded-xl bg-gold/20 flex items-center justify-center text-gold border border-gold/30">
+                  <Sparkles className="w-4 h-4" />
                 </div>
               </div>
 
               <div className="w-full h-px bg-white/10"></div>
 
-              <div className="flex items-center space-x-2 text-right group">
+              <div className="flex items-center space-x-3 text-right">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-semibold text-gold tracking-wider uppercase">Premium</span>
-                  <span className="text-[9px] text-ivory/70">Materials</span>
+                  <span className="text-[11px] font-bold text-gold tracking-widest uppercase">PREMIUM</span>
+                  <span className="text-[10px] text-ivory/80">Materials</span>
                 </div>
-                <div className="w-7 h-7 rounded-lg bg-gold/20 flex items-center justify-center text-gold">
-                  <Layers className="w-3.5 h-3.5" />
+                <div className="w-8 h-8 rounded-xl bg-gold/20 flex items-center justify-center text-gold border border-gold/30">
+                  <Layers className="w-4 h-4" />
                 </div>
               </div>
 
               <div className="w-full h-px bg-white/10"></div>
 
-              <div className="flex items-center space-x-2 text-right group">
+              <div className="flex items-center space-x-3 text-right">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-semibold text-gold tracking-wider uppercase">Expert</span>
-                  <span className="text-[9px] text-ivory/70">Execution</span>
+                  <span className="text-[11px] font-bold text-gold tracking-widest uppercase">EXPERT</span>
+                  <span className="text-[10px] text-ivory/80">Execution</span>
                 </div>
-                <div className="w-7 h-7 rounded-lg bg-gold/20 flex items-center justify-center text-gold">
-                  <Award className="w-3.5 h-3.5" />
+                <div className="w-8 h-8 rounded-xl bg-gold/20 flex items-center justify-center text-gold border border-gold/30">
+                  <Award className="w-4 h-4" />
                 </div>
               </div>
             </div>
 
-            {/* Cursive Calligraphy Signature: "Your Dream Our Design" */}
+            {/* Cursive Calligraphy: "Your Dream Our Design" */}
             <div className="hidden lg:block absolute bottom-4 right-16 text-right select-none pointer-events-none">
-              <span className="font-serif italic text-3xl xl:text-4xl text-softwhite drop-shadow-[0_2px_8px_rgba(33,28,25,0.7)] tracking-wide opacity-95">
+              <span className="font-serif italic text-3xl xl:text-4xl text-softwhite drop-shadow-[0_2px_10px_rgba(33,28,25,0.85)] tracking-wide">
                 Your Dream Our Design
               </span>
             </div>

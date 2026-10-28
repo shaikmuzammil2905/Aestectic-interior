@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ShieldCheck, 
@@ -9,7 +9,9 @@ import {
   HeartHandshake, 
   ArrowRight,
   MapPin,
-  Calendar
+  Calendar,
+  X,
+  Check
 } from 'lucide-react';
 import { siteConfig } from '../data/siteConfig';
 
@@ -17,37 +19,110 @@ interface AboutPageProps {
   onOpenConsultation?: () => void;
 }
 
+interface ValueCardData {
+  id: string;
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+  extendedTitle: string;
+  extendedDesc: string;
+  checkpoints: string[];
+  clientAssurance: string;
+}
+
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation }) => {
-  const companyValues = [
+  const [activePopupValue, setActivePopupValue] = useState<ValueCardData | null>(null);
+
+  const companyValues: ValueCardData[] = [
     {
+      id: 'thoughtful-design',
       title: 'Thoughtful Design',
       desc: 'We begin with your daily habits, morning routines, and aesthetic dreams, crafting spaces that feel natural and authentic.',
       icon: <Sparkles className="w-5 h-5 text-gold" />,
+      extendedTitle: 'Human-Centered Architectural Philosophy',
+      extendedDesc: 'Design is not mere ornamentation—it is the seamless harmonization of circulation, natural daylight, acoustic comfort, and tactile intimacy. Our senior architects study your family rhythms to create spatial blueprints tailored uniquely to you.',
+      checkpoints: [
+        'Detailed lifestyle interview before drawing a single floor layout',
+        'Natural lighting orientation and shadow optimization',
+        'Custom furniture proportioning to maximize clear walkway space',
+        'Harmonized sensory palettes blending natural stone, wood veneers, and soft textiles'
+      ],
+      clientAssurance: 'Guaranteed 100% bespoke design customized to your personal taste without generic cookie-cutter templates.'
     },
     {
+      id: 'clear-communication',
       title: 'Clear Communication',
       desc: 'Transparent budgets, realistic timelines, and regular progress reports so you are always in complete control.',
       icon: <MessageSquare className="w-5 h-5 text-gold" />,
+      extendedTitle: 'Complete Transparency at Every Milestone',
+      extendedDesc: 'Interior transformations can often feel opaque and stressful. We eliminate all anxiety with structured weekly updates, transparent itemized BOQs (Bill of Quantities), and dedicated single-point project managers.',
+      checkpoints: [
+        'Itemized component-by-component price transparency with zero hidden extras',
+        'Dedicated WhatsApp coordination group with site engineer and design lead',
+        'Weekly video & photo walkthroughs of site and factory fabrication progress',
+        'Pre-agreed realistic handover schedule with penalty assurances'
+      ],
+      clientAssurance: 'You will always know what is being built, when it arrives, and exactly what it costs.'
     },
     {
+      id: 'quality-execution',
       title: 'Quality-Focused Execution',
       desc: 'Zero tolerance for substandard hardware. Every panel, screw, and hinge is calibrated to exacting standards.',
       icon: <ShieldCheck className="w-5 h-5 text-gold" />,
+      extendedTitle: 'Direct In-House Factory Standards',
+      extendedDesc: 'By manufacturing modular cabinetry in our own facility in Mallapur, Hyderabad, we maintain ruthless quality control over edge banding, moisture barrier seals, and hardware calibration that third-party contractors simply cannot match.',
+      checkpoints: [
+        '100% BWP (Boiling Waterproof) and calibrated high-density marine ply carcass',
+        'PUR hot-melt moisture proof edge banding with zero peeling risk',
+        'German soft-close hinges and tandem box runners tested for 100,000 cycles',
+        'Laser-guided leveling for precision zero-gap installation'
+      ],
+      clientAssurance: 'Factory-tested modular durability built to withstand humid Indian monsoon conditions.'
     },
     {
+      id: 'personalized-solutions',
       title: 'Personalized Solutions',
       desc: 'No cookie-cutter templates. Every layout, wardrobe drawer, and kitchen carousel is built around your specific lifestyle.',
       icon: <HeartHandshake className="w-5 h-5 text-gold" />,
+      extendedTitle: 'Tailored Down to the Millimeter',
+      extendedDesc: 'Whether you need specialized pull-outs for traditional spice containers, dedicated jewelry drawers with velvet lining, or concealed gaming console wire conduits, our modular units are crafted to your exact specifications.',
+      checkpoints: [
+        'Custom modular depths and heights to fit specific room architectural alcoves',
+        'Ergonomic internal partitioning designed around your apparel and accessories',
+        'Vastu-compliant sanctuary placements and serene temple mandir detailing',
+        'Personalized finish matching across Italian marble, acrylic, and PU polish'
+      ],
+      clientAssurance: 'Every square foot is engineered around how you live and work.'
     },
     {
+      id: 'functional-planning',
       title: 'Functional Planning',
       desc: 'Balancing visual grandeur with practical storage, ergonomics, ventilation, and durable surface engineering.',
       icon: <CheckCircle2 className="w-5 h-5 text-gold" />,
+      extendedTitle: 'Ergonomic Excellence & Practical Storage',
+      extendedDesc: 'A home must be as enjoyable to live in as it is stunning to look at. We plan spatial flow, kitchen work triangles, ventilation paths, and concealed utility conduits so your daily living remains effortless.',
+      checkpoints: [
+        'Golden work triangle optimization for effortless cooking movement',
+        'Concealed cable routing and integrated charging points in all consoles',
+        'Anti-scratch, anti-fingerprint surface treatments for high-traffic zones',
+        'Maximized overhead and loft storage integrated into false ceilings'
+      ],
+      clientAssurance: 'Effortless maintenance and clutter-free living built into the architectural foundation.'
     },
     {
+      id: 'customer-satisfaction',
       title: 'Customer Satisfaction',
       desc: 'Our work is not complete until every snag is resolved and you step into a spotless, beautifully finished home.',
       icon: <Factory className="w-5 h-5 text-gold" />,
+      extendedTitle: 'Turnkey Handover & Continued Support',
+      extendedDesc: 'Our relationship does not end at key handover. We perform an exhaustive 45-point snag inspection, professional deep cleaning, and provide ongoing maintenance support so you enjoy total peace of mind.',
+      checkpoints: [
+        'Comprehensive 45-point joint inspection before handover',
+        'Professional deep-cleaning and surface sanitization prior to move-in',
+        'Detailed hardware maintenance manual and warranty documentation',
+        'Responsive post-handover customer support team in Hyderabad'
+      ],
+      clientAssurance: 'A stress-free handover and a home ready for you to make memories in.'
     },
   ];
 
@@ -165,7 +240,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation }) => {
         </div>
       </section>
 
-      {/* Core Company Values Grid */}
+      {/* Core Company Values Grid with INTERACTIVE POPUPS (image copy 7) */}
       <section className="py-20 bg-ivory-50 border-t border-subtle/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -177,31 +252,136 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation }) => {
               Our Core Commitments
             </h2>
             <p className="text-sm text-muted">
-              Built on honesty, structural integrity, and dedicated craftsmanship.
+              Click any standard below to inspect our detailed architectural principles & factory execution guarantees.
             </p>
           </div>
 
+          {/* The 6 Cards from image copy 7 - Click to Open Popup! */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {companyValues.map((val, idx) => (
+            {companyValues.map((val) => (
               <div
-                key={idx}
-                className="bg-softwhite rounded-2xl p-6 border border-subtle/80 shadow-sm hover:shadow-md hover:border-gold/50 transition-all duration-300 space-y-3"
+                key={val.id}
+                onClick={() => setActivePopupValue(val)}
+                className="bg-softwhite rounded-3xl p-7 border border-subtle/80 shadow-sm hover:shadow-xl hover:border-gold/60 transition-all duration-300 space-y-3 cursor-pointer group relative overflow-hidden"
               >
-                <div className="w-12 h-12 rounded-xl bg-ivory flex items-center justify-center border border-subtle">
+                <div className="w-12 h-12 rounded-2xl bg-ivory flex items-center justify-center border border-subtle group-hover:bg-gold/20 group-hover:scale-110 transition-all duration-300">
                   {val.icon}
                 </div>
-                <h3 className="font-serif text-lg font-bold text-espresso">
+                <h3 className="font-serif text-xl font-bold text-espresso group-hover:text-gold-dark transition-colors">
                   {val.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-muted leading-relaxed">
+                <p className="text-xs sm:text-sm text-muted leading-relaxed line-clamp-3">
                   {val.desc}
                 </p>
+
+                <div className="pt-3 flex items-center space-x-1 text-gold text-xs font-semibold uppercase tracking-wider group-hover:translate-x-1 transition-transform">
+                  <span>View Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
               </div>
             ))}
           </div>
 
         </div>
       </section>
+
+      {/* MODAL POPUP FOR CORE VALUE DETAILS (image copy 7) */}
+      {activePopupValue && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-charcoal/80 backdrop-blur-md animate-fade-in">
+          <div 
+            className="fixed inset-0" 
+            onClick={() => setActivePopupValue(null)}
+            aria-hidden="true"
+          ></div>
+
+          <div className="relative w-full max-w-2xl bg-softwhite rounded-3xl shadow-2xl border border-gold/40 overflow-hidden z-10 animate-fade-up">
+            
+            {/* Modal Header */}
+            <div className="bg-espresso text-softwhite p-6 flex items-center justify-between border-b border-gold/30">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-gold/20 text-gold flex items-center justify-center border border-gold/40">
+                  {activePopupValue.icon}
+                </div>
+                <div>
+                  <span className="text-[10px] tracking-widest text-gold font-bold uppercase block">
+                    AESTHETIC ARCHITECTURAL STANDARD
+                  </span>
+                  <h3 className="font-serif text-2xl font-bold">
+                    {activePopupValue.title}
+                  </h3>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setActivePopupValue(null)}
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-gold hover:text-charcoal text-softwhite flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 sm:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
+              <div>
+                <h4 className="font-serif text-lg font-bold text-espresso mb-2">
+                  {activePopupValue.extendedTitle}
+                </h4>
+                <p className="text-sm text-muted leading-relaxed">
+                  {activePopupValue.extendedDesc}
+                </p>
+              </div>
+
+              {/* Execution Checkpoints */}
+              <div className="bg-ivory/60 rounded-2xl p-5 border border-subtle/80 space-y-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-espresso block">
+                  Quality Checkpoints & Deliverables:
+                </span>
+                <div className="space-y-2">
+                  {activePopupValue.checkpoints.map((cp, idx) => (
+                    <div key={idx} className="flex items-start space-x-2.5 text-xs sm:text-sm text-espresso">
+                      <Check className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
+                      <span>{cp}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Client Assurance */}
+              <div className="p-4 rounded-xl bg-gold/10 border border-gold/30 text-xs sm:text-sm text-espresso font-medium flex items-center space-x-3">
+                <ShieldCheck className="w-5 h-5 text-gold flex-shrink-0" />
+                <span>{activePopupValue.clientAssurance}</span>
+              </div>
+
+              {/* Action Button */}
+              <div className="pt-2 flex items-center justify-end space-x-3">
+                <button
+                  onClick={() => setActivePopupValue(null)}
+                  className="px-5 py-2.5 rounded-full border border-subtle text-xs font-semibold uppercase tracking-wider text-espresso hover:bg-ivory transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    setActivePopupValue(null);
+                    if (onOpenConsultation) {
+                      onOpenConsultation();
+                    } else {
+                      window.location.href = '/contact';
+                    }
+                  }}
+                  className="px-6 py-2.5 rounded-full bg-espresso hover:bg-espresso-light text-softwhite text-xs font-semibold uppercase tracking-wider transition-colors shadow cursor-pointer flex items-center space-x-2"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-gold" />
+                  <span>Discuss Your Project</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* Office & Workshop Presence */}
       <section className="py-16 bg-charcoal text-softwhite border-t border-espresso-light">

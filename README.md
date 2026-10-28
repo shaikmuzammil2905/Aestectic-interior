@@ -88,3 +88,4 @@ npm run preview
 - **Soft White:** `#FFFEFB`
 - **Muted Text:** `#756B61`
 - **Subtle Borders:** `#DED4C6`
+

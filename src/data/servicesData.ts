@@ -240,3 +240,4 @@ export const servicesData: ServiceItem[] = [
     timeline: '1 - 2 Weeks Iterative Design',
   },
 ];
+

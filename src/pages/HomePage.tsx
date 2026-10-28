@@ -33,3 +33,4 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenConsultation }) => {
     </div>
   );
 };
+

@@ -90,19 +90,16 @@ export const ServicesGrid: React.FC = () => {
             ))}
           </div>
 
-          {/* Right Feature Card: Custom Furniture & Modular Manufacturing */}
+          {/* Right Feature Card: image copy 8.png set in background as requested in image copy 5 */}
           <div className="lg:col-span-4">
             <Link
               to="/services/custom-furniture-manufacturing"
               className="group relative block w-full h-full min-h-[340px] rounded-2xl overflow-hidden shadow-lg border border-subtle/80"
             >
               <img
-                src="/assets/cf_card.png"
+                src="/assets/custom-furniture-hd.png"
                 alt="Custom Furniture & Modular Manufacturing"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
-                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/50 to-transparent"></div>
               

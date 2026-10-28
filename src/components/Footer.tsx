@@ -15,40 +15,24 @@ import { scrollToTop } from '../utils';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-charcoal text-ivory/80 pt-16 pb-24 md:pb-12 border-t border-espresso-light relative overflow-hidden">
+    <footer className="bg-charcoal text-ivory/80 pt-16 pb-28 md:pb-12 border-t border-espresso-light relative overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 pb-12 border-b border-espresso-light/60">
           
-          {/* Brand Col */}
+          {/* Brand Col: Transparent white/gold logo, ZERO white box! */}
           <div className="space-y-4">
             <Link to="/" className="inline-block">
-              <div className="flex items-center space-x-3">
-                <img
-                  src="/assets/logo.png"
-                  alt="Aesthetic Interiors Logo"
-                  className="h-10 w-auto object-contain brightness-0 invert opacity-95"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
-                />
-                <div className="flex flex-col">
-                  <span className="font-serif text-lg font-bold tracking-[0.18em] text-softwhite uppercase leading-none">
-                    AESTHETIC
-                  </span>
-                  <span className="font-sans text-[10px] tracking-[0.25em] text-gold font-semibold uppercase leading-tight mt-0.5">
-                    INTERIORS
-                  </span>
-                  <span className="font-sans text-[8px] tracking-[0.18em] text-sand/70 uppercase leading-none mt-0.5">
-                    & MODULAR FACTORY
-                  </span>
-                </div>
-              </div>
+              <img
+                src="/assets/logo_white.png"
+                alt="Aesthetic Interiors & Modular Factory"
+                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-300 hover:scale-[1.02]"
+              />
             </Link>
 
-            <p className="text-xs text-ivory/70 leading-relaxed max-w-sm">
+            <p className="text-xs text-ivory/70 leading-relaxed max-w-sm pt-2">
               Bespoke interior design and precision-crafted modular furniture manufactured directly in our factory. Serving homes and commercial spaces across Telangana with 8+ years of dedicated excellence.
             </p>
 

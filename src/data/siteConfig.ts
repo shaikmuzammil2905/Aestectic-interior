@@ -78,3 +78,4 @@ export const getWhatsAppLink = (message?: string, number = siteConfig.whatsappNu
   const text = encodeURIComponent(message || defaultMsg);
   return `https://wa.me/${number}?text=${text}`;
 };
+

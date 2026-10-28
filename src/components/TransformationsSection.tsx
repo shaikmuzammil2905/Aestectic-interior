@@ -13,7 +13,7 @@ export const TransformationsSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-start">
           
           {/* ========================================================
-              LEFT COLUMN: BEFORE & AFTER SHOWCASE
+              LEFT COLUMN: BEFORE & AFTER SHOWCASE (HD FULL BOX)
              ======================================================== */}
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-3">
@@ -34,15 +34,15 @@ export const TransformationsSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Draggable Interactive Slider */}
-            <div className="relative">
+            {/* Draggable Interactive Slider with HD Pictures filling full box (image copy 10) */}
+            <div className="relative w-full overflow-hidden rounded-2xl shadow-xl border border-subtle">
               <BeforeAfterSlider
-                beforeImage="/assets/transformation_before.png"
-                afterImage="/assets/transformation_after.png"
+                beforeImage="/assets/transformation_before_hd.jpg"
+                afterImage="/assets/transformation_after_hd.jpg"
                 beforeLabel="Before"
                 afterLabel="After"
-                aspectRatio="aspect-[4/3]"
-                className="w-full shadow-xl"
+                aspectRatio="aspect-[4/3] sm:aspect-[16/10]"
+                className="w-full h-full object-cover"
               />
             </div>
 
@@ -58,7 +58,7 @@ export const TransformationsSection: React.FC = () => {
           </div>
 
           {/* ========================================================
-              RIGHT COLUMN: FEATURED PROJECTS
+              RIGHT COLUMN: FEATURED PROJECTS (4 DISTINCT HD PICS)
              ======================================================== */}
           <div className="lg:col-span-7 space-y-6">
             
@@ -91,7 +91,7 @@ export const TransformationsSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Grid of 4 Projects */}
+            {/* Grid of 4 Projects with Distinct HD Photos (image copy 9) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {featuredProjects.map((project) => (
                 <Link
@@ -103,15 +103,12 @@ export const TransformationsSection: React.FC = () => {
                     src={project.coverImage}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80';
-                    }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/40 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/30 to-transparent"></div>
 
                   <div className="absolute bottom-0 left-0 right-0 p-4 flex items-end justify-between">
                     <div>
-                      <h3 className="font-sans text-sm sm:text-base font-semibold text-softwhite leading-tight group-hover:text-gold-light transition-colors">
+                      <h3 className="font-sans text-sm sm:text-base font-semibold text-softwhite leading-tight group-hover:text-gold-light transition-colors drop-shadow">
                         {project.title}
                       </h3>
                       <p className="text-[11px] text-ivory/80 mt-0.5">
@@ -119,7 +116,7 @@ export const TransformationsSection: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="w-8 h-8 rounded-full bg-softwhite/20 border border-white/30 backdrop-blur-sm text-softwhite flex items-center justify-center group-hover:bg-gold group-hover:text-charcoal group-hover:border-gold transition-all duration-300">
+                    <div className="w-8 h-8 rounded-full bg-softwhite/20 border border-white/30 backdrop-blur-sm text-softwhite flex items-center justify-center group-hover:bg-gold group-hover:text-charcoal group-hover:border-gold transition-all duration-300 flex-shrink-0">
                       <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </div>

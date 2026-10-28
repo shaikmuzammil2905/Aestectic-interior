@@ -145,3 +145,4 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({ onOpenConsultation }) 
     </div>
   );
 };
+
