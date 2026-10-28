@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { MobileBottomNav } from './components/MobileBottomNav';
-import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
+import { SideFloatingActions } from './components/SideFloatingActions';
 import { ConsultationModal } from './components/ConsultationModal';
 import { ScrollToTop } from './components/ScrollToTop';
 
@@ -34,7 +34,7 @@ export function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-ivory text-espresso selection:bg-gold/30 selection:text-espresso">
+      <div className="min-h-screen flex flex-col bg-ivory text-espresso selection:bg-gold/30 selection:text-espresso relative">
         
         {/* Main Sticky Header */}
         <Header onOpenConsultation={() => openConsultation()} />
@@ -59,13 +59,13 @@ export function App() {
         {/* Footer */}
         <Footer />
 
-        {/* Mobile Fixed Bottom Bar (WhatsApp, Call, and Nav tabs as in image copy.png) */}
+        {/* Mobile Sleek Bottom Navigation Tabs (No bulky double bars!) */}
         <MobileBottomNav />
 
-        {/* Floating WhatsApp Action (Desktop/Tablet) */}
-        <WhatsAppFloatingButton />
+        {/* Luxury Side Floating Buttons with Interactive Popups (WhatsApp, Call, Consult) */}
+        <SideFloatingActions onOpenConsultation={(srv) => openConsultation(srv)} />
 
-        {/* Global Consultation Modal */}
+        {/* Global Consultation Modal Popup */}
         <ConsultationModal
           isOpen={isConsultationModalOpen}
           onClose={closeConsultation}
@@ -77,4 +77,3 @@ export function App() {
 }
 
 export default App;
-
