@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowRight, 
@@ -6,19 +6,35 @@ import {
   Maximize2, 
   X, 
   ChevronLeft, 
-  ChevronRight,
-  Filter
+  ChevronRight, 
+  Filter 
 } from 'lucide-react';
-import { projectsData, projectCategories } from '../data/projectsData';
+import { projectsData as fallbackProjects, projectCategories } from '../data/projectsData';
+import { contentService } from '../services/contentService';
 import { ProjectItem } from '../types';
 
 export const ProjectsPage: React.FC = () => {
+  const [projects, setProjects] = useState<ProjectItem[]>(fallbackProjects);
   const [activeCategory, setActiveCategory] = useState('all');
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
+  useEffect(() => {
+    contentService.getProjects().then((data) => {
+      if (data && data.length > 0) setProjects(data);
+    });
+
+    const unsub = contentService.subscribeToTable('projects', () => {
+      contentService.getProjects().then((data) => {
+        if (data && data.length > 0) setProjects(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
+
   const filteredProjects = activeCategory === 'all'
-    ? projectsData
-    : projectsData.filter((p) => p.categorySlug === activeCategory);
+    ? projects
+    : projects.filter((p) => p.categorySlug === activeCategory);
 
   return (
     <div className="w-full bg-ivory">

@@ -1,30 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Quote, 
   Star, 
   ChevronLeft, 
   ChevronRight, 
-  ArrowRight,
+  ArrowRight, 
   Sparkles 
 } from 'lucide-react';
-import { testimonialsData } from '../data/processData';
+import { testimonialsData as fallbackTestimonials } from '../data/processData';
+import { contentService } from '../services/contentService';
+import { TestimonialItem } from '../types';
 
 interface TestimonialsSectionProps {
   onOpenConsultation?: () => void;
 }
 
 export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ onOpenConsultation }) => {
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>(fallbackTestimonials);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  useEffect(() => {
+    contentService.getTestimonials().then((data) => {
+      if (data && data.length > 0) setTestimonials(data);
+    });
+
+    const unsub = contentService.subscribeToTable('testimonials', () => {
+      contentService.getTestimonials().then((data) => {
+        if (data && data.length > 0) setTestimonials(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
+
   const nextTestimonial = () => {
-    setActiveIndex((prev) => (prev + 1) % testimonialsData.length);
+    setActiveIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
-    setActiveIndex((prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length);
+    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const current = testimonialsData[activeIndex];
+  const current = testimonials[activeIndex] || testimonials[0] || fallbackTestimonials[0];
 
   return (
     <section className="py-20 lg:py-24 bg-ivory relative border-t border-subtle/50">

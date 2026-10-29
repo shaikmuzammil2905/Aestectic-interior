@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, 
@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import { contentService, HeroSlideItem } from '../services/contentService';
 
 interface HeroSectionProps {
   onOpenConsultation?: () => void;
@@ -16,32 +17,77 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) => {
   const [activeSlide, setActiveSlide] = useState(0);
-
-  const heroSlides = [
+  const [heroSlides, setHeroSlides] = useState<HeroSlideItem[]>([
     {
       eyebrow: 'LUXURY MADE INTO REALITY',
-      headingLine1: 'Thoughtfully Designed.',
-      headingLine2: 'Beautifully Lived.',
+      heading_line1: 'Thoughtfully Designed.',
+      heading_line2: 'Beautifully Lived.',
       subtitle: 'We create bespoke interiors and premium modular spaces with in-house modular manufacturing, blending style, functionality and timeless elegance.',
-      tags: 'Residential Interiors • Modular Kitchens • Custom Furniture'
+      tags: 'Residential Interiors • Modular Kitchens • Custom Furniture',
+      desktop_bg: '/assets/hero-desktop.png',
+      mobile_bg: '/assets/hero-mobile.png',
     },
     {
       eyebrow: 'IN-HOUSE MODULAR FACTORY',
-      headingLine1: 'Precision Engineered.',
-      headingLine2: 'Direct From Factory.',
+      heading_line1: 'Precision Engineered.',
+      heading_line2: 'Direct From Factory.',
       subtitle: 'German-grade hardware, zero-defect edge banding, and high-density marine ply crafted to perfection in our Hyderabad manufacturing facility.',
-      tags: 'Modular Wardrobes • Modular Kitchens • TV Units'
+      tags: 'Modular Wardrobes • Modular Kitchens • TV Units',
+      desktop_bg: '/assets/hero-desktop.png',
+      mobile_bg: '/assets/hero-mobile.png',
     },
     {
       eyebrow: '8+ YEARS OF EXCELLENCE',
-      headingLine1: 'Seamless Execution.',
-      headingLine2: 'Zero Stress Journey.',
+      heading_line1: 'Seamless Execution.',
+      heading_line2: 'Zero Stress Journey.',
       subtitle: 'From 3D photorealistic visualization to turnkey civil and carpentry coordination, we bring complete transparency to your home transformation.',
-      tags: 'Turnkey Living • Luxury Villas • Commercial Studios'
+      tags: 'Turnkey Living • Luxury Villas • Commercial Studios',
+      desktop_bg: '/assets/hero-desktop.png',
+      mobile_bg: '/assets/hero-mobile.png',
     }
-  ];
+  ]);
+  const [scriptText, setScriptText] = useState('Your Dream Our Design');
 
-  const current = heroSlides[activeSlide];
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const [slidesData, settings] = await Promise.all([
+          contentService.getHeroSlides(),
+          contentService.getSiteSettings(),
+        ]);
+        if (slidesData && slidesData.length > 0) {
+          setHeroSlides(slidesData);
+        }
+        if (settings && (settings as any).heroScriptText) {
+          setScriptText((settings as any).heroScriptText);
+        }
+      } catch (err) {
+        console.error('Failed to fetch hero content:', err);
+      }
+    };
+
+    fetchHeroData();
+
+    // Subscribe to realtime updates for hero slides
+    const unsubSlides = contentService.subscribeToTable('hero_slides', () => {
+      contentService.getHeroSlides().then((res) => {
+        if (res && res.length > 0) setHeroSlides(res);
+      });
+    });
+
+    const unsubSettings = contentService.subscribeToTable('site_settings', () => {
+      contentService.getSiteSettings().then((s) => {
+        if (s && (s as any).heroScriptText) setScriptText((s as any).heroScriptText);
+      });
+    });
+
+    return () => {
+      unsubSlides();
+      unsubSettings();
+    };
+  }, []);
+
+  const current = heroSlides[activeSlide] || heroSlides[0];
 
   const nextSlide = () => {
     setActiveSlide((prev) => (prev + 1) % heroSlides.length);
@@ -59,7 +105,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
          ============================================================ */}
       <div className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
         <img
-          src="/assets/hero-desktop.png"
+          src={current.desktop_bg || '/assets/hero-desktop.png'}
           alt="Luxury Aesthetic Living Room"
           className="w-full h-full object-cover object-right-center animate-kenburns scale-105 transition-all duration-1000 ease-out will-change-transform"
         />
@@ -74,7 +120,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
          ============================================================ */}
       <div className="lg:hidden absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
         <img
-          src="/assets/hero-mobile.png"
+          src={current.mobile_bg || '/assets/hero-mobile.png'}
           alt="Luxury Living Room Mobile"
           className="w-full h-full object-cover object-center animate-kenburns scale-105 transition-all duration-1000 ease-out will-change-transform"
         />
@@ -103,9 +149,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
 
             {/* Grand Serif Headline */}
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-medium text-espresso tracking-tight leading-[1.12] drop-shadow-sm">
-              <span className="block">{current.headingLine1}</span>
+              <span className="block">{current.heading_line1 || (current as any).headingLine1}</span>
               <span className="block font-semibold text-espresso-dark italic">
-                {current.headingLine2}
+                {current.heading_line2 || (current as any).headingLine2}
               </span>
             </h1>
 
@@ -218,7 +264,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenConsultation }) 
             {/* Cursive Calligraphy: "Your Dream Our Design" */}
             <div className="hidden lg:block absolute bottom-4 right-16 text-right select-none pointer-events-none">
               <span className="font-serif italic text-3xl xl:text-4xl text-softwhite drop-shadow-[0_2px_10px_rgba(33,28,25,0.85)] tracking-wide">
-                Your Dream Our Design
+                {scriptText || 'Your Dream Our Design'}
               </span>
             </div>
 

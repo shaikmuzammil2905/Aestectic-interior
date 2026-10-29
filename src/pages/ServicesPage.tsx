@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowRight, 
@@ -9,15 +9,32 @@ import {
   Layers,
   ChevronRight
 } from 'lucide-react';
-import { servicesData } from '../data/servicesData';
+import { servicesData as fallbackServices } from '../data/servicesData';
 import { getWhatsAppLink } from '../data/siteConfig';
+import { contentService } from '../services/contentService';
+import { ServiceItem } from '../types';
 
 interface ServicesPageProps {
   onOpenConsultation?: (serviceName?: string) => void;
 }
 
 export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenConsultation }) => {
+  const [services, setServices] = useState<ServiceItem[]>(fallbackServices);
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'residential' | 'modular' | 'commercial'>('all');
+
+  useEffect(() => {
+    contentService.getServices().then((data) => {
+      if (data && data.length > 0) setServices(data);
+    });
+
+    const unsub = contentService.subscribeToTable('services', () => {
+      contentService.getServices().then((data) => {
+        if (data && data.length > 0) setServices(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
 
   const filterCategory = (serviceId: string) => {
     if (selectedFilter === 'all') return true;
@@ -25,15 +42,15 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenConsultation }
       return ['modular-kitchen-design', 'wardrobes-and-storage', 'modular-furniture-manufacturing', 'custom-furniture-manufacturing'].includes(serviceId);
     }
     if (selectedFilter === 'commercial') {
-      return ['office-and-commercial-interiors', 'turnkey-interior-solutions'].includes(serviceId);
+      return ['office-and-commercial-interiors', 'turnkey-interior-solutions', 'commercial-and-office-interiors'].includes(serviceId);
     }
     if (selectedFilter === 'residential') {
-      return !['office-and-commercial-interiors'].includes(serviceId);
+      return !['office-and-commercial-interiors', 'commercial-and-office-interiors'].includes(serviceId);
     }
     return true;
   };
 
-  const filteredServices = servicesData.filter((s) => filterCategory(s.id));
+  const filteredServices = services.filter((s) => filterCategory(s.id));
 
   return (
     <div className="w-full bg-ivory">

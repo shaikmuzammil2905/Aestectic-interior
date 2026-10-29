@@ -1,10 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 import { projectsData } from '../data/projectsData';
+import { contentService } from '../services/contentService';
+import { BeforeAfterItem } from '../types';
 
 export const TransformationsSection: React.FC = () => {
+  const [transformation, setTransformation] = useState<BeforeAfterItem>({
+    id: 'living-room-transformation',
+    title: 'Modern Living Room Transformation',
+    category: 'Living Room',
+    description: 'Transforming an unadorned, flat room into an opulent living lounge.',
+    beforeImage: '/assets/transformation_before_hd.jpg',
+    afterImage: '/assets/transformation_after_hd.jpg',
+    details: [],
+  });
+
+  useEffect(() => {
+    contentService.getBeforeAfter().then((items) => {
+      if (items && items.length > 0) {
+        setTransformation(items[0]);
+      }
+    });
+
+    const unsub = contentService.subscribeToTable('before_after_projects', () => {
+      contentService.getBeforeAfter().then((items) => {
+        if (items && items.length > 0) setTransformation(items[0]);
+      });
+    });
+
+    return () => unsub();
+  }, []);
+
   const featuredProjects = projectsData.slice(0, 4);
 
   return (
@@ -37,8 +65,8 @@ export const TransformationsSection: React.FC = () => {
             {/* Draggable Interactive Slider with HD Pictures filling full box (image copy 10) */}
             <div className="relative w-full overflow-hidden rounded-2xl shadow-xl border border-subtle">
               <BeforeAfterSlider
-                beforeImage="/assets/transformation_before_hd.jpg"
-                afterImage="/assets/transformation_after_hd.jpg"
+                beforeImage={transformation.beforeImage || '/assets/transformation_before_hd.jpg'}
+                afterImage={transformation.afterImage || '/assets/transformation_after_hd.jpg'}
                 beforeLabel="Before"
                 afterLabel="After"
                 aspectRatio="aspect-[4/3] sm:aspect-[16/10]"

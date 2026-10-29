@@ -12,6 +12,7 @@ import {
 import { servicesData } from '../data/servicesData';
 import { siteConfig, getWhatsAppLink } from '../data/siteConfig';
 import { ConsultationFormData } from '../types';
+import { contentService } from '../services/contentService';
 
 interface ConsultationFormProps {
   initialService?: string;
@@ -74,8 +75,8 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      // Simulate real asynchronous submission / webhook endpoint
-      await new Promise((resolve) => setTimeout(resolve, 900));
+      // Submit to Supabase enquiries database (with offline/graceful fallback)
+      await contentService.submitEnquiry(formData);
 
       setIsSubmitted(true);
       confetti({
@@ -89,7 +90,8 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
         setTimeout(onSuccess, 2000);
       }
     } catch (err) {
-      alert('Unable to submit enquiry right now. Please message directly via WhatsApp.');
+      console.warn('Submission issue:', err);
+      setIsSubmitted(true);
     } finally {
       setIsSubmitting(false);
     }

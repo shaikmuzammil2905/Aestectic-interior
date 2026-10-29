@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -7,14 +7,37 @@ import {
 } from 'lucide-react';
 import { BeforeAfterSlider } from '../components/BeforeAfterSlider';
 import { beforeAfterData } from '../data/beforeAfterData';
+import { contentService } from '../services/contentService';
+import { BeforeAfterItem } from '../types';
 
 interface BeforeAfterPageProps {
   onOpenConsultation?: () => void;
 }
 
 export const BeforeAfterPage: React.FC<BeforeAfterPageProps> = ({ onOpenConsultation }) => {
+  const [items, setItems] = useState<BeforeAfterItem[]>(beforeAfterData);
   const [selectedId, setSelectedId] = useState(beforeAfterData[0].id);
-  const currentItem = beforeAfterData.find((b) => b.id === selectedId) || beforeAfterData[0];
+
+  useEffect(() => {
+    contentService.getBeforeAfter().then((data) => {
+      if (data && data.length > 0) {
+        setItems(data);
+        if (!data.some((d) => d.id === selectedId)) {
+          setSelectedId(data[0].id);
+        }
+      }
+    });
+
+    const unsub = contentService.subscribeToTable('before_after_projects', () => {
+      contentService.getBeforeAfter().then((data) => {
+        if (data && data.length > 0) setItems(data);
+      });
+    });
+
+    return () => unsub();
+  }, [selectedId]);
+
+  const currentItem = items.find((b) => b.id === selectedId) || items[0] || beforeAfterData[0];
 
   return (
     <div className="w-full bg-ivory">
@@ -49,7 +72,7 @@ export const BeforeAfterPage: React.FC<BeforeAfterPageProps> = ({ onOpenConsulta
 
           {/* Transformation Switchers */}
           <div className="pt-6 flex flex-wrap items-center justify-center gap-2">
-            {beforeAfterData.map((item) => (
+            {items.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setSelectedId(item.id)}
