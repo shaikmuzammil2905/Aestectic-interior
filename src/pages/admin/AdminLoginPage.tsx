@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Sparkles, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 export const AdminLoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -10,44 +10,25 @@ export const AdminLoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage(null);
-    setSuccessMessage(null);
 
     const cleanEmail = email.trim();
     const cleanPassword = password.trim();
 
     try {
-      if (isSignUpMode) {
-        const { data, error } = await supabase.auth.signUp({
-          email: cleanEmail,
-          password: cleanPassword,
-        });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password: cleanPassword,
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        if (data.user && !data.session) {
-          setSuccessMessage('Admin account created! If email confirmation is enabled, check your inbox to confirm.');
-        } else {
-          setSuccessMessage('Admin account created and logged in!');
-          navigate('/admin');
-        }
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password: cleanPassword,
-        });
-
-        if (error) throw error;
-
-        if (data.session) {
-          navigate('/admin');
-        }
+      if (data.session) {
+        navigate('/admin');
       }
     } catch (err: any) {
       setErrorMessage(err.message || 'Authentication failed. Please verify your credentials.');
@@ -83,7 +64,7 @@ export const AdminLoginPage: React.FC = () => {
           
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-softwhite">
-              {isSignUpMode ? 'Register Studio Admin' : 'Admin Sign In'}
+              Admin Sign In
             </h2>
             <span className="text-[11px] text-ivory/60">
               Supabase Auth
@@ -97,13 +78,6 @@ export const AdminLoginPage: React.FC = () => {
             </div>
           )}
 
-          {successMessage && (
-            <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-800/80 text-emerald-200 text-xs flex items-start space-x-2">
-              <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-              <span>{successMessage}</span>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-4">
             
             {/* Email Field */}
@@ -112,7 +86,7 @@ export const AdminLoginPage: React.FC = () => {
                 Admin Email
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   required
@@ -124,27 +98,53 @@ export const AdminLoginPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Password Field */}
+            {/* Password Field with Interactive Eye Toggle */}
             <div>
-              <label className="block text-[11px] font-semibold text-ivory/80 uppercase tracking-wider mb-1.5">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-[11px] font-semibold text-ivory/80 uppercase tracking-wider">
+                  Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-[11px] text-gold hover:text-gold-light transition-colors flex items-center space-x-1 cursor-pointer focus:outline-none"
+                  tabIndex={-1}
+                >
+                  {showPassword ? (
+                    <>
+                      <EyeOff className="w-3.5 h-3.5" />
+                      <span>Hide</span>
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>Show</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
               <div className="relative">
-                <Lock className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="admin123"
-                  className="w-full bg-charcoal border border-white/15 focus:border-gold rounded-xl pl-10 pr-10 py-3 text-xs text-softwhite placeholder:text-ivory/30 focus:outline-none transition-colors"
+                  placeholder="Enter your password"
+                  className="w-full bg-charcoal border border-white/15 focus:border-gold rounded-xl pl-10 pr-11 py-3 text-xs text-softwhite placeholder:text-ivory/30 focus:outline-none transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ivory/50 hover:text-gold transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-ivory/50 hover:text-gold transition-colors cursor-pointer rounded-md focus:outline-none"
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -155,28 +155,11 @@ export const AdminLoginPage: React.FC = () => {
               disabled={isLoading}
               className="w-full mt-2 py-3.5 rounded-xl bg-gold hover:bg-gold-light text-charcoal font-semibold text-xs uppercase tracking-wider transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
             >
-              <span>{isLoading ? 'Processing...' : isSignUpMode ? 'Create Admin Account' : 'Authenticate & Enter'}</span>
+              <span>{isLoading ? 'Authenticating...' : 'Authenticate & Enter'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
           </form>
-
-          {/* Toggle Register / Login */}
-          <div className="pt-2 text-center border-t border-white/10">
-            <button
-              type="button"
-              onClick={() => {
-                setIsSignUpMode(!isSignUpMode);
-                setErrorMessage(null);
-                setSuccessMessage(null);
-              }}
-              className="text-xs text-gold/90 hover:text-gold transition-colors font-medium"
-            >
-              {isSignUpMode
-                ? 'Already have an admin account? Sign In'
-                : 'First time setup? Create initial admin account'}
-            </button>
-          </div>
 
         </div>
 
@@ -195,4 +178,3 @@ export const AdminLoginPage: React.FC = () => {
     </div>
   );
 };
-
