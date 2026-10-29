@@ -10,7 +10,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
-import { siteConfig, getWhatsAppLink } from '../data/siteConfig';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import { ConsultationFormData } from '../types';
 import { contentService } from '../services/contentService';
 
@@ -25,6 +25,7 @@ export const ConsultationForm: React.FC<ConsultationFormProps> = ({
   onSuccess,
   className = '',
 }) => {
+  const { getWhatsAppUrl } = useSiteSettings();
   const [formData, setFormData] = useState<ConsultationFormData>({
     fullName: '',
     phone: '',
@@ -106,7 +107,7 @@ Property: ${formData.propertyType}
 Service: ${formData.serviceRequired}
 Budget: ${formData.approxBudget}
 Details: ${formData.requirements || 'Interested in a design consultation.'}`;
-    return getWhatsAppLink(msg);
+    return getWhatsAppUrl(msg);
   };
 
   if (isSubmitted) {

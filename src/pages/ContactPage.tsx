@@ -10,10 +10,11 @@ import {
   Calendar,
   Sparkles
 } from 'lucide-react';
-import { siteConfig, getWhatsAppLink } from '../data/siteConfig';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 import { ConsultationForm } from '../components/ConsultationForm';
 
 export const ContactPage: React.FC = () => {
+  const { settings, getWhatsAppUrl } = useSiteSettings();
   return (
     <div className="w-full bg-ivory">
       
@@ -79,16 +80,16 @@ export const ContactPage: React.FC = () => {
                         Primary Hotline
                       </span>
                       <a
-                        href={`tel:${siteConfig.primaryPhone}`}
+                        href={`tel:${settings.primaryPhone}`}
                         className="font-serif text-base font-bold text-espresso hover:text-gold transition-colors"
                       >
-                        {siteConfig.primaryPhoneDisplay}
+                        {settings.primaryPhoneDisplay}
                       </a>
                     </div>
                   </div>
 
                   <a
-                    href={getWhatsAppLink(undefined, siteConfig.whatsappNumber)}
+                    href={getWhatsAppUrl(undefined, settings.whatsappNumber)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors"
@@ -108,16 +109,16 @@ export const ContactPage: React.FC = () => {
                         Secondary Hotline
                       </span>
                       <a
-                        href={`tel:${siteConfig.secondaryPhone}`}
+                        href={`tel:${settings.secondaryPhone}`}
                         className="font-serif text-base font-bold text-espresso hover:text-gold transition-colors"
                       >
-                        {siteConfig.secondaryPhoneDisplay}
+                        {settings.secondaryPhoneDisplay}
                       </a>
                     </div>
                   </div>
 
                   <a
-                    href={getWhatsAppLink(undefined, siteConfig.whatsappSecondary)}
+                    href={getWhatsAppUrl(undefined, settings.whatsappSecondary)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors"
@@ -139,7 +140,7 @@ export const ContactPage: React.FC = () => {
                       Office & Modular Factory
                     </span>
                     <p className="text-xs sm:text-sm font-medium text-espresso leading-relaxed">
-                      {siteConfig.officeAddress}
+                      {settings.officeAddress}
                     </p>
                     <span className="text-[11px] text-muted block pt-0.5">
                       Service Area: Throughout Telangana
@@ -149,7 +150,7 @@ export const ContactPage: React.FC = () => {
 
                 <div className="pt-2">
                   <a
-                    href={siteConfig.mapDirectionsUrl}
+                    href={settings.mapDirectionsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl bg-ivory hover:bg-sand/30 border border-subtle text-xs font-semibold text-espresso transition-colors"
@@ -197,11 +198,11 @@ export const ContactPage: React.FC = () => {
                   NAVIGATE TO OUR WORKSHOP
                 </span>
                 <h3 className="font-serif text-xl sm:text-2xl font-medium">
-                  Sultanpur, Mallapur, Hyderabad – 500005
+                  {settings.officeAddress || 'Sultanpur, Mallapur, Hyderabad – 500005'}
                 </h3>
               </div>
               <a
-                href={siteConfig.mapDirectionsUrl}
+                href={settings.mapDirectionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-2.5 rounded-full bg-gold hover:bg-gold-light text-charcoal text-xs font-bold uppercase tracking-wider transition-colors inline-flex items-center space-x-2"

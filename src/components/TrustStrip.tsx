@@ -6,8 +6,11 @@ import {
   MapPin, 
   Sparkles 
 } from 'lucide-react';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 export const TrustStrip: React.FC = () => {
+  const { settings } = useSiteSettings();
+
   return (
     <section className="relative -mt-6 sm:-mt-8 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="bg-softwhite rounded-2xl shadow-lg border border-subtle/80 p-4 sm:p-6 lg:py-6 lg:px-8">
@@ -20,7 +23,7 @@ export const TrustStrip: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <span className="font-serif text-base sm:text-lg font-bold text-espresso leading-tight">
-                8+ Years
+                {settings.experienceYears ? `${settings.experienceYears} Years` : '8+ Years'}
               </span>
               <span className="text-[11px] sm:text-xs text-muted font-medium">
                 of Experience

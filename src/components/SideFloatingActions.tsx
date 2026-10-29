@@ -9,13 +9,14 @@ import {
   Sparkles,
   ChevronRight
 } from 'lucide-react';
-import { siteConfig, getWhatsAppLink } from '../data/siteConfig';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 interface SideFloatingActionsProps {
   onOpenConsultation: (service?: string) => void;
 }
 
 export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpenConsultation }) => {
+  const { settings, getWhatsAppUrl } = useSiteSettings();
   const [activePopup, setActivePopup] = useState<'whatsapp' | 'call' | null>(null);
 
   const quickWhatsAppInquiries = [
@@ -83,7 +84,7 @@ export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpen
 
               <div className="space-y-2">
                 <a
-                  href={`tel:${siteConfig.primaryPhone}`}
+                  href={`tel:${settings.primaryPhone}`}
                   className="flex items-center justify-between p-2.5 rounded-xl bg-ivory hover:bg-sand/30 border border-subtle transition-colors group"
                 >
                   <div className="flex flex-col">
@@ -91,7 +92,7 @@ export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpen
                       Primary Line
                     </span>
                     <span className="text-sm font-bold text-espresso font-serif">
-                      +91 8712376914
+                      {settings.primaryPhoneDisplay}
                     </span>
                   </div>
                   <div className="w-7 h-7 rounded-full bg-espresso text-softwhite flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -100,7 +101,7 @@ export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpen
                 </a>
 
                 <a
-                  href={`tel:${siteConfig.secondaryPhone}`}
+                  href={`tel:${settings.secondaryPhone}`}
                   className="flex items-center justify-between p-2.5 rounded-xl bg-ivory hover:bg-sand/30 border border-subtle transition-colors group"
                 >
                   <div className="flex flex-col">
@@ -108,7 +109,7 @@ export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpen
                       Secondary Line
                     </span>
                     <span className="text-sm font-bold text-espresso font-serif">
-                      +91 9703297187
+                      {settings.secondaryPhoneDisplay}
                     </span>
                   </div>
                   <div className="w-7 h-7 rounded-full bg-espresso text-softwhite flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -167,7 +168,7 @@ export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpen
               {/* Direct Number Links */}
               <div className="grid grid-cols-2 gap-2">
                 <a
-                  href={getWhatsAppLink(undefined, siteConfig.whatsappNumber)}
+                  href={getWhatsAppUrl(undefined, settings.whatsappNumber)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-center py-2 px-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold transition-colors"
@@ -175,7 +176,7 @@ export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpen
                   Hotline 1
                 </a>
                 <a
-                  href={getWhatsAppLink(undefined, siteConfig.whatsappSecondary)}
+                  href={getWhatsAppUrl(undefined, settings.whatsappSecondary)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-center py-2 px-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold transition-colors"
@@ -192,7 +193,7 @@ export const SideFloatingActions: React.FC<SideFloatingActionsProps> = ({ onOpen
                 {quickWhatsAppInquiries.map((q, idx) => (
                   <a
                     key={idx}
-                    href={getWhatsAppLink(q.msg)}
+                    href={getWhatsAppUrl(q.msg)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between p-2 rounded-lg bg-ivory hover:bg-emerald-50 border border-subtle/80 hover:border-emerald-300 text-xs font-medium text-espresso transition-colors group"

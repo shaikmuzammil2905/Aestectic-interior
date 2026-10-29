@@ -10,18 +10,36 @@ import {
   ChevronRight,
   MapPin
 } from 'lucide-react';
-import { siteConfig, getWhatsAppLink } from '../data/siteConfig';
+import { siteConfig } from '../data/siteConfig';
 import { servicesData } from '../data/servicesData';
+import { useSiteSettings } from '../context/SiteSettingsContext';
+import { contentService } from '../services/contentService';
 
 interface HeaderProps {
   onOpenConsultation?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
+  const { settings, getWhatsAppUrl } = useSiteSettings();
+  const [services, setServices] = useState(servicesData);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdown, setServicesDropdown] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    contentService.getServices().then((data) => {
+      if (data && data.length > 0) setServices(data);
+    });
+
+    const unsub = contentService.subscribeToTable('services', () => {
+      contentService.getServices().then((data) => {
+        if (data && data.length > 0) setServices(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,7 +143,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
                     </span>
                   </div>
                   <div className="max-h-80 overflow-y-auto px-2 space-y-1">
-                    {servicesData.slice(0, 8).map((srv) => (
+                    {services.slice(0, 8).map((srv) => (
                       <Link
                         key={srv.id}
                         to={`/services/${srv.id}`}
@@ -211,21 +229,21 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
 
             <div className="flex items-center space-x-2 pl-2 border-l border-subtle text-xs">
               <a
-                href={`tel:${siteConfig.primaryPhone}`}
+                href={`tel:${settings.primaryPhone}`}
                 className="flex items-center text-espresso/90 hover:text-espresso font-medium transition-colors group"
-                title="Call 8712376914 / 9703297187"
+                title={`Call ${settings.primaryPhoneDisplay} / ${settings.secondaryPhoneDisplay}`}
               >
                 <div className="w-7 h-7 rounded-full bg-sand/50 flex items-center justify-center mr-1.5 text-gold group-hover:bg-gold group-hover:text-softwhite transition-colors">
                   <Phone className="w-3.5 h-3.5" />
                 </div>
                 <div className="flex flex-col leading-tight">
-                  <span className="font-semibold text-[11px]">8712376914</span>
-                  <span className="text-[10px] text-muted">9703297187</span>
+                  <span className="font-semibold text-[11px]">{settings.primaryPhoneDisplay}</span>
+                  <span className="text-[10px] text-muted">{settings.secondaryPhoneDisplay}</span>
                 </div>
               </a>
 
               <a
-                href={getWhatsAppLink()}
+                href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-7 h-7 rounded-full bg-emerald-600/10 text-emerald-700 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-colors ml-1"
@@ -260,7 +278,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
         {mobileMenuOpen && (
           <div className="lg:hidden bg-softwhite border-b border-subtle px-4 pt-4 pb-6 space-y-4 shadow-xl animate-fade-in">
             <div className="space-y-1">
-              {siteConfig.navLinks.map((link) => (
+              {(settings.navLinks || siteConfig.navLinks).map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
@@ -277,35 +295,35 @@ export const Header: React.FC<HeaderProps> = ({ onOpenConsultation }) => {
 
             <div className="pt-4 border-t border-subtle/80 space-y-2">
               <a
-                href={getWhatsAppLink()}
+                href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center space-x-2 w-full py-2.5 px-4 rounded-xl bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wider shadow-sm"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>Chat on WhatsApp (+91 8712376914)</span>
+                <span>Chat on WhatsApp ({settings.primaryPhoneDisplay})</span>
               </a>
 
               <div className="grid grid-cols-2 gap-2">
                 <a
-                  href={`tel:${siteConfig.primaryPhone}`}
+                  href={`tel:${settings.primaryPhone}`}
                   className="flex items-center justify-center space-x-1.5 py-2 px-3 rounded-lg bg-ivory text-espresso border border-subtle text-xs font-medium"
                 >
                   <Phone className="w-3.5 h-3.5 text-gold" />
-                  <span>8712376914</span>
+                  <span>{settings.primaryPhoneDisplay}</span>
                 </a>
                 <a
-                  href={`tel:${siteConfig.secondaryPhone}`}
+                  href={`tel:${settings.secondaryPhone}`}
                   className="flex items-center justify-center space-x-1.5 py-2 px-3 rounded-lg bg-ivory text-espresso border border-subtle text-xs font-medium"
                 >
                   <Phone className="w-3.5 h-3.5 text-gold" />
-                  <span>9703297187</span>
+                  <span>{settings.secondaryPhoneDisplay}</span>
                 </a>
               </div>
 
               <div className="text-[11px] text-muted text-center pt-2">
                 <MapPin className="w-3 h-3 inline-block mr-1 text-gold" />
-                Sultanpur, Mallapur, Hyderabad – 500005
+                {settings.officeAddress || 'Sultanpur, Mallapur, Hyderabad – 500005'}
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -11,19 +11,46 @@ import {
   Sparkles,
   ChevronRight
 } from 'lucide-react';
-import { servicesData } from '../data/servicesData';
+import { servicesData as fallbackServices } from '../data/servicesData';
 import { ConsultationForm } from '../components/ConsultationForm';
-import { getWhatsAppLink } from '../data/siteConfig';
+import { contentService } from '../services/contentService';
+import { ServiceItem } from '../types';
 
 export const ServiceDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const service = servicesData.find((s) => s.id === id);
+  const [allServices, setAllServices] = useState<ServiceItem[]>(fallbackServices);
+  const [loading, setLoading] = useState(true);
 
-  if (!service) {
+  useEffect(() => {
+    contentService.getServices().then((data) => {
+      if (data && data.length > 0) setAllServices(data);
+      setLoading(false);
+    });
+
+    const unsub = contentService.subscribeToTable('services', () => {
+      contentService.getServices().then((data) => {
+        if (data && data.length > 0) setAllServices(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
+
+  const service = allServices.find((s) => s.id === id);
+
+  if (!service && !loading) {
     return <Navigate to="/services" replace />;
   }
 
-  const relatedServices = servicesData.filter((s) => s.id !== service.id).slice(0, 3);
+  if (!service) {
+    return (
+      <div className="w-full min-h-[50vh] flex items-center justify-center bg-ivory">
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  const relatedServices = allServices.filter((s) => s.id !== service.id).slice(0, 3);
 
   return (
     <div className="w-full bg-ivory">

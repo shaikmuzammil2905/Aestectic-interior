@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Phone, 
@@ -9,11 +9,29 @@ import {
   CheckCircle2, 
   ExternalLink
 } from 'lucide-react';
-import { siteConfig, getWhatsAppLink } from '../data/siteConfig';
 import { servicesData } from '../data/servicesData';
+import { useSiteSettings } from '../context/SiteSettingsContext';
+import { contentService } from '../services/contentService';
+import { ServiceItem } from '../types';
 import { scrollToTop } from '../utils';
 
 export const Footer: React.FC = () => {
+  const { settings, getWhatsAppUrl } = useSiteSettings();
+  const [services, setServices] = useState<ServiceItem[]>(servicesData);
+
+  useEffect(() => {
+    contentService.getServices().then((data) => {
+      if (data && data.length > 0) setServices(data);
+    });
+
+    const unsub = contentService.subscribeToTable('services', () => {
+      contentService.getServices().then((data) => {
+        if (data && data.length > 0) setServices(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
   return (
     <footer className="bg-charcoal text-ivory/80 pt-16 pb-28 md:pb-12 border-t border-espresso-light relative overflow-hidden">
       {/* Subtle background glow */}
@@ -33,12 +51,12 @@ export const Footer: React.FC = () => {
             </Link>
 
             <p className="text-xs text-ivory/70 leading-relaxed max-w-sm pt-2">
-              Bespoke interior design and precision-crafted modular furniture manufactured directly in our factory. Serving homes and commercial spaces across Telangana with 8+ years of dedicated excellence.
+              Bespoke interior design and precision-crafted modular furniture manufactured directly in our factory. Serving homes and commercial spaces across Telangana with {settings.experienceYears || '8+ Years'} of dedicated excellence.
             </p>
 
             <div className="pt-2 flex items-center space-x-3">
               <a
-                href={getWhatsAppLink()}
+                href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-8 h-8 rounded-full bg-espresso-light hover:bg-emerald-600 text-ivory hover:text-white flex items-center justify-center transition-colors"
@@ -91,7 +109,7 @@ export const Footer: React.FC = () => {
               Explore
             </h4>
             <ul className="space-y-2.5 text-xs">
-              {siteConfig.navLinks.map((link) => (
+              {(settings.navLinks || []).map((link) => (
                 <li key={link.path}>
                   <Link
                     to={link.path}
@@ -111,7 +129,7 @@ export const Footer: React.FC = () => {
               Our Services
             </h4>
             <ul className="space-y-2.5 text-xs">
-              {servicesData.slice(0, 6).map((service) => (
+              {services.slice(0, 6).map((service) => (
                 <li key={service.id}>
                   <Link
                     to={`/services/${service.id}`}
@@ -127,7 +145,7 @@ export const Footer: React.FC = () => {
                   to="/services"
                   className="text-gold font-medium hover:underline inline-flex items-center space-x-1 pt-1"
                 >
-                  <span>View All 14 Services</span>
+                  <span>View All {services.length} Services</span>
                   <ExternalLink className="w-3 h-3 ml-0.5" />
                 </Link>
               </li>
@@ -144,10 +162,10 @@ export const Footer: React.FC = () => {
               <MapPin className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-ivory/90 leading-relaxed">
-                  {siteConfig.officeAddress}
+                  {settings.officeAddress}
                 </p>
                 <a
-                  href={siteConfig.mapDirectionsUrl}
+                  href={settings.mapDirectionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gold text-[11px] hover:underline inline-flex items-center space-x-1 mt-1"
@@ -161,18 +179,18 @@ export const Footer: React.FC = () => {
             <div className="flex items-center space-x-2.5 text-xs pt-1">
               <Phone className="w-4 h-4 text-gold flex-shrink-0" />
               <div className="flex flex-col">
-                <a href={`tel:${siteConfig.primaryPhone}`} className="hover:text-gold font-medium">
-                  {siteConfig.primaryPhoneDisplay}
+                <a href={`tel:${settings.primaryPhone}`} className="hover:text-gold font-medium">
+                  {settings.primaryPhoneDisplay}
                 </a>
-                <a href={`tel:${siteConfig.secondaryPhone}`} className="hover:text-gold font-medium">
-                  {siteConfig.secondaryPhoneDisplay}
+                <a href={`tel:${settings.secondaryPhone}`} className="hover:text-gold font-medium">
+                  {settings.secondaryPhoneDisplay}
                 </a>
               </div>
             </div>
 
             <div className="pt-2">
               <a
-                href={getWhatsAppLink()}
+                href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-emerald-700/30 hover:bg-emerald-600/50 border border-emerald-500/30 text-emerald-300 text-xs font-medium transition-colors"
@@ -188,7 +206,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Strip */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-ivory/50 space-y-4 sm:space-y-0">
           <p>
-            © {new Date().getFullYear()} {siteConfig.businessName}. All rights reserved.
+            © {new Date().getFullYear()} {settings.businessName}. All rights reserved.
           </p>
 
           <div className="flex items-center space-x-6">

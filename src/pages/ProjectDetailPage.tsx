@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -10,16 +10,45 @@ import {
   X,
   Sparkles
 } from 'lucide-react';
-import { projectsData } from '../data/projectsData';
-import { getWhatsAppLink } from '../data/siteConfig';
+import { projectsData as fallbackProjects } from '../data/projectsData';
+import { useSiteSettings } from '../context/SiteSettingsContext';
+import { contentService } from '../services/contentService';
+import { ProjectItem } from '../types';
 
 export const ProjectDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const project = projectsData.find((p) => p.id === id);
+  const { getWhatsAppUrl } = useSiteSettings();
+  const [projects, setProjects] = useState<ProjectItem[]>(fallbackProjects);
+  const [loading, setLoading] = useState(true);
   const [selectedImg, setSelectedImg] = useState<string | null>(null);
 
-  if (!project) {
+  useEffect(() => {
+    contentService.getProjects().then((data) => {
+      if (data && data.length > 0) setProjects(data);
+      setLoading(false);
+    });
+
+    const unsub = contentService.subscribeToTable('projects', () => {
+      contentService.getProjects().then((data) => {
+        if (data && data.length > 0) setProjects(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
+
+  const project = projects.find((p) => p.id === id);
+
+  if (!project && !loading) {
     return <Navigate to="/projects" replace />;
+  }
+
+  if (!project) {
+    return (
+      <div className="w-full min-h-[50vh] flex items-center justify-center bg-ivory">
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
@@ -131,7 +160,7 @@ export const ProjectDetailPage: React.FC = () => {
                   </Link>
 
                   <a
-                    href={getWhatsAppLink(`Hello Aesthetic Interiors, I love your ${project.title} project and would like to discuss a similar interior design.`)}
+                    href={getWhatsAppUrl(`Hello Aesthetic Interiors, I love your ${project.title} project and would like to discuss a similar interior design.`)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center space-x-2 transition-colors shadow-sm"

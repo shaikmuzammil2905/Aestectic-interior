@@ -10,7 +10,6 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { servicesData as fallbackServices } from '../data/servicesData';
-import { getWhatsAppLink } from '../data/siteConfig';
 import { contentService } from '../services/contentService';
 import { ServiceItem } from '../types';
 

@@ -4,7 +4,7 @@ import { ArrowRight, ChevronRight } from 'lucide-react';
 import { BeforeAfterSlider } from './BeforeAfterSlider';
 import { projectsData } from '../data/projectsData';
 import { contentService } from '../services/contentService';
-import { BeforeAfterItem } from '../types';
+import { BeforeAfterItem, ProjectItem } from '../types';
 
 export const TransformationsSection: React.FC = () => {
   const [transformation, setTransformation] = useState<BeforeAfterItem>({
@@ -16,6 +16,7 @@ export const TransformationsSection: React.FC = () => {
     afterImage: '/assets/transformation_after_hd.jpg',
     details: [],
   });
+  const [projects, setProjects] = useState<ProjectItem[]>(projectsData);
 
   useEffect(() => {
     contentService.getBeforeAfter().then((items) => {
@@ -24,16 +25,31 @@ export const TransformationsSection: React.FC = () => {
       }
     });
 
-    const unsub = contentService.subscribeToTable('before_after_projects', () => {
+    contentService.getProjects().then((items) => {
+      if (items && items.length > 0) {
+        setProjects(items);
+      }
+    });
+
+    const unsubBA = contentService.subscribeToTable('before_after_projects', () => {
       contentService.getBeforeAfter().then((items) => {
         if (items && items.length > 0) setTransformation(items[0]);
       });
     });
 
-    return () => unsub();
+    const unsubProj = contentService.subscribeToTable('projects', () => {
+      contentService.getProjects().then((items) => {
+        if (items && items.length > 0) setProjects(items);
+      });
+    });
+
+    return () => {
+      unsubBA();
+      unsubProj();
+    };
   }, []);
 
-  const featuredProjects = projectsData.slice(0, 4);
+  const featuredProjects = projects.slice(0, 4);
 
   return (
     <section className="py-20 lg:py-24 bg-ivory-50 border-t border-subtle/50">

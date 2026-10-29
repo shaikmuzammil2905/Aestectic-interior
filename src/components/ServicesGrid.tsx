@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Home, 
@@ -13,8 +13,26 @@ import {
   Sparkles
 } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
+import { contentService } from '../services/contentService';
+import { ServiceItem } from '../types';
 
 export const ServicesGrid: React.FC = () => {
+  const [allServices, setAllServices] = useState<ServiceItem[]>(servicesData);
+
+  useEffect(() => {
+    contentService.getServices().then((data) => {
+      if (data && data.length > 0) setAllServices(data);
+    });
+
+    const unsub = contentService.subscribeToTable('services', () => {
+      contentService.getServices().then((data) => {
+        if (data && data.length > 0) setAllServices(data);
+      });
+    });
+
+    return () => unsub();
+  }, []);
+
   // Mapping icons to service slugs
   const serviceIcons: Record<string, React.ReactNode> = {
     'home-interior-design': <Home className="w-6 h-6 text-gold" />,
@@ -27,7 +45,7 @@ export const ServicesGrid: React.FC = () => {
     'turnkey-interior-solutions': <KeyRound className="w-6 h-6 text-gold" />,
   };
 
-  const previewServices = servicesData.filter((s) => s.id in serviceIcons);
+  const previewServices = allServices.filter((s) => s.id in serviceIcons);
 
   return (
     <section className="py-20 lg:py-24 bg-ivory relative">

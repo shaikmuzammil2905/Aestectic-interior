@@ -1,8 +1,10 @@
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
-import { getWhatsAppLink } from '../data/siteConfig';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 export const WhatsAppFloatingButton: React.FC = () => {
+  const { getWhatsAppUrl } = useSiteSettings();
+
   return (
     <div className="hidden lg:block fixed bottom-8 right-8 z-40 group">
       <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-charcoal text-softwhite text-xs py-1.5 px-3 rounded-xl shadow-lg border border-gold/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
@@ -11,7 +13,7 @@ export const WhatsAppFloatingButton: React.FC = () => {
       </div>
 
       <a
-        href={getWhatsAppLink()}
+        href={getWhatsAppUrl()}
         target="_blank"
         rel="noopener noreferrer"
         className="w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 relative border-2 border-white/80"

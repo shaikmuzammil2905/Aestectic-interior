@@ -13,7 +13,7 @@ import {
   X,
   Check
 } from 'lucide-react';
-import { siteConfig } from '../data/siteConfig';
+import { useSiteSettings } from '../context/SiteSettingsContext';
 
 interface AboutPageProps {
   onOpenConsultation?: () => void;
@@ -31,6 +31,7 @@ interface ValueCardData {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation }) => {
+  const { settings } = useSiteSettings();
   const [activePopupValue, setActivePopupValue] = useState<ValueCardData | null>(null);
 
   const companyValues: ValueCardData[] = [
@@ -154,7 +155,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation }) => {
           </h1>
 
           <p className="text-sm sm:text-base text-ivory/80 max-w-2xl mx-auto font-normal leading-relaxed">
-            {siteConfig.experienceYears} years of transforming residential and commercial environments across Telangana through thoughtful planning and in-house modular manufacturing.
+            {settings.experienceYears || '8+'} years of transforming residential and commercial environments across Telangana through thoughtful planning and in-house modular manufacturing.
           </p>
         </div>
       </section>
@@ -210,7 +211,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation }) => {
                   <strong>Aesthetic Interiors & Modular Factory</strong> brings together interior design and modular solutions to create spaces that balance beauty, functionality, and everyday comfort.
                 </p>
                 <p>
-                  With 8 years of industry experience, our approach begins with understanding your requirements, planning carefully, communicating clearly, and maintaining quality throughout the project.
+                  With {settings.experienceYears || '8+'} years of industry experience, our approach begins with understanding your requirements, planning carefully, communicating clearly, and maintaining quality throughout the project.
                 </p>
                 <p>
                   From residential interiors to modular kitchens and custom furniture, we aim to make the design journey organized, transparent, and stress-free.
@@ -400,7 +401,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenConsultation }) => {
 
           <div className="flex-shrink-0">
             <a
-              href={siteConfig.mapDirectionsUrl}
+              href={settings.mapDirectionsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-gold hover:bg-gold-light text-charcoal text-xs font-bold uppercase tracking-wider transition-all shadow-md"

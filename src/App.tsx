@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { SiteSettingsProvider } from './context/SiteSettingsContext';
 import { ProtectedRoute } from './components/admin/ProtectedRoute';
 import { AdminLayout } from './components/admin/AdminLayout';
 
@@ -85,9 +86,10 @@ export function App() {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
+      <SiteSettingsProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
           {/* Admin Login Route */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
@@ -131,7 +133,8 @@ export function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
+    </SiteSettingsProvider>
+  </AuthProvider>
   );
 }
 
