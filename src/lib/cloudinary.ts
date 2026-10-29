@@ -83,3 +83,4 @@ export const getOptimizedCloudinaryUrl = (
 
   return `${parts[0]}/upload/${transformations.join(',')}/${parts[1]}`;
 };
+

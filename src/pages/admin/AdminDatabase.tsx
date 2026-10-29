@@ -384,3 +384,4 @@ CREATE POLICY "Admin logs" ON admin_activity_logs FOR ALL USING (auth.role() = '
     </div>
   );
 };
+
