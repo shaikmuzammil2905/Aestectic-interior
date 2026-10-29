@@ -39,3 +39,11 @@
   background: #B59A69;
 }
 
+/* Hide third-party / browser extension injected overlays */
+[id*="antigravity"],
+[class*="antigravity"],
+[data-antigravity] {
+  display: none !important;
+}
+
+
