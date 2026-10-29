@@ -246,76 +246,41 @@ export const AdminDashboard: React.FC = () => {
         )}
       </div>
 
-      {/* Quick Launch & System Status */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* Quick Content Actions */}
-        <div className="bg-white border border-subtle/80 rounded-2xl p-6 shadow-xs space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-espresso">
-            Quick Content Shortcuts
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            <Link
-              to="/admin/services"
-              className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
-            >
-              <Plus className="w-4 h-4 text-gold" />
-              <span>Add New Service</span>
-            </Link>
-            <Link
-              to="/admin/projects"
-              className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
-            >
-              <Plus className="w-4 h-4 text-gold" />
-              <span>Add Portfolio Project</span>
-            </Link>
-            <Link
-              to="/admin/before-after"
-              className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
-            >
-              <Plus className="w-4 h-4 text-gold" />
-              <span>New Before & After</span>
-            </Link>
-            <Link
-              to="/admin/hero"
-              className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
-            >
-              <Plus className="w-4 h-4 text-gold" />
-              <span>Update Hero Slide</span>
-            </Link>
-          </div>
+      {/* Quick Content Shortcuts */}
+      <div className="bg-white border border-subtle/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-espresso">
+          Quick Content Shortcuts
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <Link
+            to="/admin/services"
+            className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
+          >
+            <Plus className="w-4 h-4 text-gold" />
+            <span>Add New Service</span>
+          </Link>
+          <Link
+            to="/admin/projects"
+            className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
+          >
+            <Plus className="w-4 h-4 text-gold" />
+            <span>Add Portfolio Project</span>
+          </Link>
+          <Link
+            to="/admin/before-after"
+            className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
+          >
+            <Plus className="w-4 h-4 text-gold" />
+            <span>New Before & After</span>
+          </Link>
+          <Link
+            to="/admin/hero"
+            className="p-3.5 rounded-xl border border-subtle hover:border-gold/60 bg-ivory/30 hover:bg-ivory text-xs font-semibold text-espresso flex items-center space-x-2 transition-colors"
+          >
+            <Plus className="w-4 h-4 text-gold" />
+            <span>Update Hero Slide</span>
+          </Link>
         </div>
-
-        {/* System & Architecture Status */}
-        <div className="bg-white border border-subtle/80 rounded-2xl p-6 shadow-xs space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-espresso">
-            Cloud Architecture Status
-          </h2>
-          <div className="space-y-3 text-xs">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-ivory/60 border border-subtle">
-              <span className="font-medium">Supabase Database</span>
-              <span className="flex items-center space-x-1.5 text-emerald-600 font-semibold">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Connected & Ready</span>
-              </span>
-            </div>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-ivory/60 border border-subtle">
-              <span className="font-medium">Cloudinary Image Delivery</span>
-              <span className="flex items-center space-x-1.5 text-emerald-600 font-semibold">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Preset `ml_default` Configured</span>
-              </span>
-            </div>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-ivory/60 border border-subtle">
-              <span className="font-medium">Realtime Subscriptions</span>
-              <span className="flex items-center space-x-1.5 text-emerald-600 font-semibold">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Active Channels</span>
-              </span>
-            </div>
-          </div>
-        </div>
-
       </div>
 
     </div>

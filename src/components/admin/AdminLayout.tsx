@@ -87,24 +87,6 @@ export const AdminLayout: React.FC = () => {
           })}
         </nav>
 
-        {/* Quick Connection Status */}
-        <div className="p-4 mx-4 mb-4 rounded-xl bg-charcoal-light/40 border border-charcoal-light/60 text-[11px] space-y-1.5">
-          <div className="flex items-center justify-between text-muted">
-            <span>Database:</span>
-            <span className="flex items-center space-x-1 text-emerald-400 font-medium">
-              <CheckCircle2 className="w-3 h-3" />
-              <span>Supabase Live</span>
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-muted">
-            <span>Media:</span>
-            <span className="flex items-center space-x-1 text-gold font-medium">
-              <CheckCircle2 className="w-3 h-3" />
-              <span>Cloudinary</span>
-            </span>
-          </div>
-        </div>
-
         {/* User profile & Actions */}
         <div className="p-4 border-t border-charcoal-light flex flex-col space-y-2">
           <div className="text-[11px] text-ivory/60 truncate px-2">
