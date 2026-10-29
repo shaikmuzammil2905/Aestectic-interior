@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Sparkles, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 
 export const AdminLoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -18,11 +19,14 @@ export const AdminLoginPage: React.FC = () => {
     setErrorMessage(null);
     setSuccessMessage(null);
 
+    const cleanEmail = email.trim();
+    const cleanPassword = password.trim();
+
     try {
       if (isSignUpMode) {
         const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
+          email: cleanEmail,
+          password: cleanPassword,
         });
 
         if (error) throw error;
@@ -35,8 +39,8 @@ export const AdminLoginPage: React.FC = () => {
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+          email: cleanEmail,
+          password: cleanPassword,
         });
 
         if (error) throw error;
@@ -128,13 +132,20 @@ export const AdminLoginPage: React.FC = () => {
               <div className="relative">
                 <Lock className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full bg-charcoal border border-white/15 focus:border-gold rounded-xl pl-10 pr-4 py-3 text-xs text-softwhite placeholder:text-ivory/30 focus:outline-none transition-colors"
+                  placeholder="admin123"
+                  className="w-full bg-charcoal border border-white/15 focus:border-gold rounded-xl pl-10 pr-10 py-3 text-xs text-softwhite placeholder:text-ivory/30 focus:outline-none transition-colors"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-ivory/50 hover:text-gold transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
