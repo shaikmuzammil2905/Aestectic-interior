@@ -55,8 +55,8 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, []);
 
   const getWhatsAppUrl = (message?: string, customNumber?: string) => {
-    const rawNumber = customNumber || settings.whatsappNumber || defaultSiteConfig.whatsappNumber;
-    const cleanNumber = rawNumber.replace(/[^0-9]/g, '');
+    const rawNumber = String(customNumber || settings.whatsappNumber || defaultSiteConfig.whatsappNumber || '');
+    const cleanNumber = rawNumber.replace(/[^0-9]/g, '') || '918712376914';
     const defaultMsg =
       'Hello Aesthetic Interiors & Modular Factory, I would like to discuss an interior design project. Please contact me to arrange a consultation.';
     const text = encodeURIComponent(message || defaultMsg);
@@ -78,3 +78,4 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
 };
 
 export const useSiteSettings = () => useContext(SiteSettingsContext);
+

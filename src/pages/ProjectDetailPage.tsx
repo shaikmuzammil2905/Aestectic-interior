@@ -111,7 +111,7 @@ export const ProjectDetailPage: React.FC = () => {
                   Project Gallery
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {project.gallery.map((imgUrl, idx) => (
+                  {(project.gallery || []).map((imgUrl, idx) => (
                     <div
                       key={idx}
                       onClick={() => setSelectedImg(imgUrl)}
@@ -142,7 +142,7 @@ export const ProjectDetailPage: React.FC = () => {
                 </h3>
 
                 <ul className="space-y-3">
-                  {project.highlights.map((h, i) => (
+                  {(project.highlights || []).map((h, i) => (
                     <li key={i} className="flex items-start space-x-2.5 text-xs sm:text-sm text-espresso font-medium">
                       <CheckCircle2 className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
                       <span>{h}</span>

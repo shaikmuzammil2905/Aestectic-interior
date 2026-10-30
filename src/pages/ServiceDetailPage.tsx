@@ -127,7 +127,7 @@ export const ServiceDetailPage: React.FC = () => {
                   <span>Agreed Scope & Configurations</span>
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  {service.scope.map((item, idx) => (
+                  {(service.scope || []).map((item, idx) => (
                     <div key={idx} className="flex items-center space-x-2.5 text-xs sm:text-sm text-espresso">
                       <CheckCircle2 className="w-4 h-4 text-gold flex-shrink-0" />
                       <span>{item}</span>
@@ -142,7 +142,7 @@ export const ServiceDetailPage: React.FC = () => {
                   What Sets Our Execution Apart
                 </h3>
                 <div className="space-y-3">
-                  {service.features.map((feat, idx) => (
+                  {(service.features || []).map((feat, idx) => (
                     <div
                       key={idx}
                       className="p-4 rounded-2xl bg-ivory-50 border border-subtle/70 flex items-start space-x-3.5"
@@ -167,7 +167,7 @@ export const ServiceDetailPage: React.FC = () => {
                   Every fixture is selected for maximum moisture resistance, smooth daily tactile feedback, and structural longevity.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  {service.materials.map((mat, idx) => (
+                  {(service.materials || []).map((mat, idx) => (
                     <div key={idx} className="flex items-center space-x-2 text-xs text-ivory">
                       <span className="w-1.5 h-1.5 rounded-full bg-gold"></span>
                       <span>{mat}</span>

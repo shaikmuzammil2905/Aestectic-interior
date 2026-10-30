@@ -504,20 +504,30 @@ export const contentService = {
   subscribeToTable(table: string, callback: () => void) {
     if (!isSupabaseConfigured()) return () => {};
 
-    const channel = supabase
-      .channel(`public:${table}`)
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table },
-        () => {
-          callback();
-        }
-      )
-      .subscribe();
+    try {
+      const channelId = `realtime_${table}_${Math.random().toString(36).substring(2, 9)}_${Date.now()}`;
+      const channel = supabase
+        .channel(channelId)
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table },
+          () => {
+            callback();
+          }
+        )
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+      return () => {
+        try {
+          supabase.removeChannel(channel);
+        } catch {
+          // Graceful cleanup
+        }
+      };
+    } catch (err) {
+      console.warn(`Failed to subscribe to ${table}:`, err);
+      return () => {};
+    }
   },
 
   // --------------------------------------------------------------------------

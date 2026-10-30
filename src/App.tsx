@@ -12,6 +12,7 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 import { SideFloatingActions } from './components/SideFloatingActions';
 import { ConsultationModal } from './components/ConsultationModal';
 import { ScrollToTop } from './components/ScrollToTop';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Public Pages
 import { HomePage } from './pages/HomePage';
@@ -49,7 +50,9 @@ const PublicLayout: React.FC<{
 
     {/* Dynamic Route Content */}
     <main className="flex-grow">
-      <Outlet />
+      <ErrorBoundary>
+        <Outlet />
+      </ErrorBoundary>
     </main>
 
     {/* Footer */}
