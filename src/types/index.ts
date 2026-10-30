@@ -9,18 +9,26 @@ export interface ServiceItem {
   scope: string[];
   materials: string[];
   timeline: string;
+  category?: string;
+  is_published?: boolean;
+  display_order?: number;
 }
 
 export interface ProjectItem {
   id: string;
   title: string;
   category: string;
-  categorySlug: 'living' | 'kitchen' | 'bedroom' | 'wardrobe' | 'tv-unit' | 'commercial' | 'furniture';
+  categorySlug: 'living' | 'kitchen' | 'bedroom' | 'wardrobe' | 'tv-unit' | 'commercial' | 'furniture' | string;
   location: string;
   description: string;
   coverImage: string;
   gallery: string[];
   highlights: string[];
+  area?: string;
+  duration?: string;
+  is_published?: boolean;
+  is_featured?: boolean;
+  display_order?: number;
 }
 
 export interface BeforeAfterItem {

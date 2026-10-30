@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Save, CheckCircle2, AlertCircle, RefreshCw, Sparkles, Building2, Phone, MapPin } from 'lucide-react';
+import { Save, CheckCircle2, AlertCircle, RefreshCw, Sparkles, Building2, Phone, MapPin, CloudSun, ExternalLink } from 'lucide-react';
 import { contentService } from '../../services/contentService';
+import { getCloudinaryConfig, setCloudinaryConfig } from '../../lib/cloudinary';
 
 export const AdminSettings: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const initialCloudConfig = getCloudinaryConfig();
+  const [cloudinaryCloudName, setCloudName] = useState(initialCloudConfig.cloudName);
+  const [cloudinaryUploadPreset, setPreset] = useState(initialCloudConfig.uploadPreset);
 
   const [formData, setFormData] = useState({
     businessName: 'Aesthetic Interiors & Modular Factory',
@@ -23,6 +28,8 @@ export const AdminSettings: React.FC = () => {
     whatsappSecondary: '919703297187',
     brandPhilosophy: 'Clear communication, thoughtful planning, customized designs, consistent quality, and a smooth, stress-free customer experience.',
     heroScriptText: 'Your Dream Our Design',
+    cloudinaryCloudName: initialCloudConfig.cloudName,
+    cloudinaryUploadPreset: initialCloudConfig.uploadPreset,
   });
 
   useEffect(() => {
@@ -31,6 +38,8 @@ export const AdminSettings: React.FC = () => {
         const data = await contentService.getSiteSettings();
         if (data) {
           setFormData((prev) => ({ ...prev, ...data }));
+          if (data.cloudinaryCloudName) setCloudName(data.cloudinaryCloudName);
+          if (data.cloudinaryUploadPreset) setPreset(data.cloudinaryUploadPreset);
         }
       } catch (err) {
         console.error('Error loading settings:', err);
@@ -53,8 +62,14 @@ export const AdminSettings: React.FC = () => {
     setMessage(null);
 
     try {
-      await contentService.updateSiteSettings(formData);
-      setMessage({ type: 'success', text: 'Site settings updated successfully in Supabase and live across the website!' });
+      setCloudinaryConfig(cloudinaryCloudName, cloudinaryUploadPreset);
+      const payload = {
+        ...formData,
+        cloudinaryCloudName: cloudinaryCloudName.trim(),
+        cloudinaryUploadPreset: cloudinaryUploadPreset.trim(),
+      };
+      await contentService.updateSiteSettings(payload);
+      setMessage({ type: 'success', text: 'Site & Cloudinary settings updated successfully in Supabase and live across the website!' });
     } catch (err: any) {
       setMessage({ type: 'error', text: err.message || 'Failed to save settings.' });
     } finally {
@@ -319,6 +334,73 @@ export const AdminSettings: React.FC = () => {
             <p className="text-[11px] text-muted mt-1">
               Displays as the elegant cursive signature overlay over the hero coffee table.
             </p>
+          </div>
+        </div>
+
+        {/* Section 5: Cloudinary Image Storage & CDN */}
+        <div className="bg-white border border-subtle/80 rounded-2xl p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-subtle pb-3">
+            <div className="flex items-center space-x-2">
+              <CloudSun className="w-4 h-4 text-gold" />
+              <h2 className="text-xs font-bold uppercase tracking-wider text-espresso">
+                5. Cloudinary Image Storage & CDN Integration
+              </h2>
+            </div>
+            <a
+              href="https://console.cloudinary.com/settings/upload"
+              target="_blank"
+              rel="noreferrer"
+              className="text-[11px] text-gold-dark hover:underline flex items-center space-x-1"
+            >
+              <span>Cloudinary Console</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+
+          <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200 text-amber-900 text-xs space-y-1.5">
+            <p className="font-semibold flex items-center space-x-1.5">
+              <span>💡 How to configure Cloudinary Unsigned Uploads:</span>
+            </p>
+            <ol className="list-decimal pl-4 space-y-1 text-[11px] text-amber-800">
+              <li>Log in to your <strong>Cloudinary Dashboard</strong> &rarr; click Settings (gear icon) &rarr; <strong>Upload</strong>.</li>
+              <li>Scroll down to <strong>Upload presets</strong> &rarr; click <strong>Add upload preset</strong>.</li>
+              <li>Set <strong>Signing Mode</strong> to <strong>Unsigned</strong> (default is Signed).</li>
+              <li>Copy the generated preset name and paste it below, then click Save.</li>
+            </ol>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-espresso mb-1">
+                Cloud Name
+              </label>
+              <input
+                type="text"
+                value={cloudinaryCloudName}
+                onChange={(e) => setCloudName(e.target.value)}
+                placeholder="e.g. grtnlr4y"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-xs text-espresso focus:border-gold focus:outline-none"
+              />
+              <p className="text-[10px] text-muted mt-1">
+                Found on your Cloudinary dashboard overview.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-espresso mb-1">
+                Upload Preset (Must be "Unsigned")
+              </label>
+              <input
+                type="text"
+                value={cloudinaryUploadPreset}
+                onChange={(e) => setPreset(e.target.value)}
+                placeholder="e.g. ml_default or unsigned_preset"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-xs text-espresso focus:border-gold focus:outline-none"
+              />
+              <p className="text-[10px] text-muted mt-1">
+                Preset configured with "Unsigned" signing mode in Cloudinary upload settings.
+              </p>
+            </div>
           </div>
         </div>
 

@@ -36,6 +36,7 @@ import { AdminBeforeAfter } from './pages/admin/AdminBeforeAfter';
 import { AdminEnquiries } from './pages/admin/AdminEnquiries';
 import { AdminTestimonials } from './pages/admin/AdminTestimonials';
 import { AdminDatabase } from './pages/admin/AdminDatabase';
+import { AdminMediaLibrary } from './pages/admin/AdminMediaLibrary';
 
 // Public Layout Container
 const PublicLayout: React.FC<{
@@ -101,6 +102,7 @@ export function App() {
             <Route element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="settings" element={<AdminSettings />} />
+              <Route path="media" element={<AdminMediaLibrary />} />
               <Route path="hero" element={<AdminHeroSlides />} />
               <Route path="services" element={<AdminServices />} />
               <Route path="projects" element={<AdminProjects />} />

@@ -22,6 +22,20 @@ export interface HeroSlideItem {
   is_published?: boolean;
 }
 
+export interface MediaAssetItem {
+  id?: string;
+  public_id: string;
+  url: string;
+  original_name?: string;
+  format?: string;
+  width?: number;
+  height?: number;
+  bytes?: number;
+  alt_text?: string;
+  section?: string;
+  created_at?: string;
+}
+
 export interface EnquiryItem {
   id?: string;
   full_name: string;
@@ -145,15 +159,25 @@ export const contentService = {
   // --------------------------------------------------------------------------
   // Hero Slides
   // --------------------------------------------------------------------------
-  async getHeroSlides(): Promise<HeroSlideItem[]> {
+  async getHeroSlides(includeDrafts = false): Promise<HeroSlideItem[]> {
     if (!isSupabaseConfigured()) return DEFAULT_HERO_SLIDES;
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('hero_slides')
         .select('*')
         .order('display_order', { ascending: true });
 
-      if (error || !data || data.length === 0) return DEFAULT_HERO_SLIDES;
+      if (!includeDrafts) {
+        query = query.eq('is_published', true);
+      }
+
+      const { data, error } = await query;
+
+      if (error || !data || data.length === 0) {
+        // Fallback to all if none published
+        if (!includeDrafts) return this.getHeroSlides(true);
+        return DEFAULT_HERO_SLIDES;
+      }
       return data;
     } catch {
       return DEFAULT_HERO_SLIDES;
@@ -181,15 +205,24 @@ export const contentService = {
   // --------------------------------------------------------------------------
   // Services
   // --------------------------------------------------------------------------
-  async getServices(): Promise<ServiceItem[]> {
+  async getServices(includeDrafts = false): Promise<ServiceItem[]> {
     if (!isSupabaseConfigured()) return servicesData;
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('services')
         .select('*')
         .order('display_order', { ascending: true });
 
-      if (error || !data || data.length === 0) return servicesData;
+      if (!includeDrafts) {
+        query = query.eq('is_published', true);
+      }
+
+      const { data, error } = await query;
+
+      if (error || !data || data.length === 0) {
+        if (!includeDrafts) return this.getServices(true);
+        return servicesData;
+      }
       return data.map((d: any) => ({
         id: d.id,
         title: d.title,
@@ -201,6 +234,8 @@ export const contentService = {
         scope: Array.isArray(d.scope) ? d.scope : [],
         materials: Array.isArray(d.materials) ? d.materials : [],
         timeline: d.timeline || '2 - 4 Weeks',
+        is_published: d.is_published ?? true,
+        display_order: d.display_order ?? 0,
       }));
     } catch {
       return servicesData;
@@ -249,15 +284,24 @@ export const contentService = {
   // --------------------------------------------------------------------------
   // Projects
   // --------------------------------------------------------------------------
-  async getProjects(): Promise<ProjectItem[]> {
+  async getProjects(includeDrafts = false): Promise<ProjectItem[]> {
     if (!isSupabaseConfigured()) return projectsData;
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('projects')
         .select('*')
         .order('display_order', { ascending: true });
 
-      if (error || !data || data.length === 0) return projectsData;
+      if (!includeDrafts) {
+        query = query.eq('is_published', true);
+      }
+
+      const { data, error } = await query;
+
+      if (error || !data || data.length === 0) {
+        if (!includeDrafts) return this.getProjects(true);
+        return projectsData;
+      }
       return data.map((d: any) => ({
         id: d.id,
         title: d.title,
@@ -268,6 +312,9 @@ export const contentService = {
         coverImage: d.cover_image,
         gallery: Array.isArray(d.gallery) ? d.gallery : [d.cover_image],
         highlights: Array.isArray(d.highlights) ? d.highlights : [],
+        is_featured: d.is_featured ?? true,
+        is_published: d.is_published ?? true,
+        display_order: d.display_order ?? 0,
       }));
     } catch {
       return projectsData;
@@ -315,15 +362,24 @@ export const contentService = {
   // --------------------------------------------------------------------------
   // Before & After Comparisons
   // --------------------------------------------------------------------------
-  async getBeforeAfter(): Promise<BeforeAfterItem[]> {
+  async getBeforeAfter(includeDrafts = false): Promise<BeforeAfterItem[]> {
     if (!isSupabaseConfigured()) return beforeAfterData;
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('before_after_projects')
         .select('*')
         .order('display_order', { ascending: true });
 
-      if (error || !data || data.length === 0) return beforeAfterData;
+      if (!includeDrafts) {
+        query = query.eq('is_published', true);
+      }
+
+      const { data, error } = await query;
+
+      if (error || !data || data.length === 0) {
+        if (!includeDrafts) return this.getBeforeAfter(true);
+        return beforeAfterData;
+      }
       return data.map((d: any) => ({
         id: d.id,
         title: d.title,
@@ -332,6 +388,8 @@ export const contentService = {
         beforeImage: d.before_image,
         afterImage: d.after_image,
         details: Array.isArray(d.details) ? d.details : [],
+        is_published: d.is_published ?? true,
+        display_order: d.display_order ?? 0,
       }));
     } catch {
       return beforeAfterData;
@@ -371,15 +429,24 @@ export const contentService = {
   // --------------------------------------------------------------------------
   // Testimonials
   // --------------------------------------------------------------------------
-  async getTestimonials(): Promise<TestimonialItem[]> {
+  async getTestimonials(includeDrafts = false): Promise<TestimonialItem[]> {
     if (!isSupabaseConfigured()) return DEFAULT_TESTIMONIALS;
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('testimonials')
         .select('*')
         .order('display_order', { ascending: true });
 
-      if (error || !data || data.length === 0) return DEFAULT_TESTIMONIALS;
+      if (!includeDrafts) {
+        query = query.eq('is_published', true);
+      }
+
+      const { data, error } = await query;
+
+      if (error || !data || data.length === 0) {
+        if (!includeDrafts) return this.getTestimonials(true);
+        return DEFAULT_TESTIMONIALS;
+      }
       return data.map((d: any) => ({
         id: d.id,
         name: d.name,
@@ -388,6 +455,8 @@ export const contentService = {
         rating: d.rating || 5,
         projectType: d.project_type || 'Interior Project',
         avatar: d.avatar,
+        is_published: d.is_published ?? true,
+        display_order: d.display_order ?? 0,
       }));
     } catch {
       return DEFAULT_TESTIMONIALS;
@@ -496,6 +565,87 @@ export const contentService = {
     const { error } = await supabase.from('enquiries').delete().eq('id', id);
     if (error) throw error;
     await this.logActivity('DELETE', 'enquiries', id, {});
+  },
+
+  // --------------------------------------------------------------------------
+  // Media Assets Library
+  // --------------------------------------------------------------------------
+  async getMediaAssets(): Promise<MediaAssetItem[]> {
+    if (!isSupabaseConfigured()) return [];
+    try {
+      const { data, error } = await supabase
+        .from('media_assets')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        await this.seedDefaultMediaAssets();
+        const { data: seeded } = await supabase
+          .from('media_assets')
+          .select('*')
+          .order('created_at', { ascending: false });
+        return seeded || [];
+      }
+      return data || [];
+    } catch (err) {
+      console.warn('Failed to get media assets:', err);
+      return [];
+    }
+  },
+
+  async saveMediaAsset(asset: Partial<MediaAssetItem>) {
+    if (!isSupabaseConfigured()) return asset;
+    const payload = {
+      public_id: asset.public_id || 'asset-' + Date.now(),
+      url: asset.url,
+      original_name: asset.original_name || 'image_' + Date.now(),
+      format: asset.format || 'jpg',
+      width: asset.width || 1200,
+      height: asset.height || 800,
+      bytes: asset.bytes || 0,
+      alt_text: asset.alt_text || 'Aesthetic Interiors media asset',
+      section: asset.section || 'general',
+    };
+
+    const { data, error } = await supabase
+      .from('media_assets')
+      .insert([payload])
+      .select()
+      .single();
+
+    if (error) throw error;
+    await this.logActivity('CREATE', 'media_assets', data.id, { url: data.url });
+    return data;
+  },
+
+  async deleteMediaAsset(id: string) {
+    const { error } = await supabase.from('media_assets').delete().eq('id', id);
+    if (error) throw error;
+    await this.logActivity('DELETE', 'media_assets', id, {});
+  },
+
+  async seedDefaultMediaAssets() {
+    const defaultAssets = [
+      { public_id: 'logo-brand', url: '/assets/logo.png', original_name: 'logo.png', section: 'branding', alt_text: 'Aesthetic Interiors Brand Logo' },
+      { public_id: 'hero-banner-main', url: '/assets/hero-desktop.png', original_name: 'hero-desktop.png', section: 'hero', alt_text: 'Living Room Hero Master Banner' },
+      { public_id: 'proj-living', url: '/assets/projects/proj_living_hd.jpg', original_name: 'proj_living_hd.jpg', section: 'projects', alt_text: 'Modern Living Room' },
+      { public_id: 'proj-kitchen', url: '/assets/projects/proj_kitchen_hd.jpg', original_name: 'proj_kitchen_hd.jpg', section: 'projects', alt_text: 'Modular Kitchen Suite' },
+      { public_id: 'proj-bedroom', url: '/assets/projects/proj_bedroom_hd.jpg', original_name: 'proj_bedroom_hd.jpg', section: 'projects', alt_text: 'Luxury Bedroom Sanctuary' },
+      { public_id: 'proj-wardrobe', url: '/assets/projects/proj_wardrobe_hd.jpg', original_name: 'proj_wardrobe_hd.jpg', section: 'projects', alt_text: 'Walk-in Wardrobe Closet' },
+      { public_id: 'proj-tvunit', url: '/assets/projects/proj_tvunit_hd.jpg', original_name: 'proj_tvunit_hd.jpg', section: 'projects', alt_text: 'Acoustic TV Media Wall' },
+      { public_id: 'custom-furniture-banner', url: '/assets/custom-furniture-hd.png', original_name: 'custom-furniture-hd.png', section: 'furniture', alt_text: 'Custom Furniture Direct Factory' },
+      { public_id: 'before-trans', url: '/assets/transformation_before_hd.jpg', original_name: 'transformation_before_hd.jpg', section: 'transformations', alt_text: 'Living Room Before Renovation' },
+      { public_id: 'after-trans', url: '/assets/transformation_after_hd.jpg', original_name: 'transformation_after_hd.jpg', section: 'transformations', alt_text: 'Living Room After Renovation' },
+      { public_id: 'service-kitchen', url: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80', original_name: 'modular-kitchen.jpg', section: 'services', alt_text: 'Modular Kitchen Design' },
+      { public_id: 'service-wardrobes', url: 'https://images.unsplash.com/photo-1558997519-83ea9252edf8?auto=format&fit=crop&w=1200&q=80', original_name: 'wardrobes.jpg', section: 'services', alt_text: 'Wardrobes & Storage' },
+    ];
+
+    try {
+      await supabase.from('media_assets').insert(defaultAssets);
+    } catch {
+      // non-blocking
+    }
   },
 
   // --------------------------------------------------------------------------

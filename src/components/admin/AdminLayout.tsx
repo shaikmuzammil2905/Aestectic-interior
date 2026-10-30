@@ -15,7 +15,8 @@ import {
   X, 
   ShieldCheck,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { isSupabaseConfigured } from '../../lib/supabase';
@@ -30,6 +31,7 @@ export const AdminLayout: React.FC = () => {
   const navItems = [
     { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { label: 'Site Settings', path: '/admin/settings', icon: Settings },
+    { label: 'Media Library', path: '/admin/media', icon: ImageIcon },
     { label: 'Hero Slides', path: '/admin/hero', icon: Sliders },
     { label: 'Services (14)', path: '/admin/services', icon: Layers },
     { label: 'Projects Showcase', path: '/admin/projects', icon: Briefcase },
